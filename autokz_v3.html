@@ -1,0 +1,3299 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoKZ — AI Советник</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --red:#D94F3D;--red2:#C23B2A;--red-soft:#FDF1EF;--red-mid:#F5C5BE;
+  --bg:#F4F6F8;--white:#FFFFFF;--ink:#1A1A2E;--muted:#6B7280;
+  --border:#E5E7EB;--card:#FFFFFF;
+  --green:#16A34A;--yellow:#D97706;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+
+/* ── HEADER ── */
+.header{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,0.06)}
+.header-inner{max-width:480px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-weight:800;font-size:20px;color:var(--red);letter-spacing:-0.5px}
+.logo span{color:var(--ink)}
+.header-key-btn{background:var(--red-soft);border:1px solid var(--red-mid);color:var(--red);font-size:12px;font-weight:600;padding:6px 12px;border-radius:8px;cursor:pointer}
+
+/* ── HERO BANNER ── */
+.hero-banner{background:linear-gradient(135deg,var(--red) 0%,#B03228 100%);color:#fff;padding:24px 16px 28px;max-width:480px;margin:0 auto}
+.hero-banner h1{font-size:22px;font-weight:800;margin-bottom:6px;line-height:1.2}
+.hero-banner p{font-size:13px;opacity:0.85;margin-bottom:16px}
+.hero-search{display:flex;gap:8px}
+.hero-search input{flex:1;padding:11px 14px;border-radius:10px;border:none;font-size:14px;font-family:'Inter',sans-serif}
+.hero-search input:focus{outline:none}
+.hero-search-btn{background:rgba(255,255,255,0.2);border:1.5px solid rgba(255,255,255,0.5);color:#fff;padding:11px 16px;border-radius:10px;font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap}
+
+/* ── CATEGORIES ── */
+.section-wrap{max-width:480px;margin:0 auto;padding:0 16px}
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:16px 16px 0;max-width:480px;margin:0 auto}
+.cat{background:var(--white);border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;transition:all 0.15s;border:1.5px solid transparent}
+.cat:hover{border-color:var(--red-mid);background:var(--red-soft)}
+.cat.active{border-color:var(--red);background:var(--red-soft)}
+.cat-icon{font-size:22px;margin-bottom:4px}
+.cat-label{font-size:11px;font-weight:500;color:var(--muted);line-height:1.2}
+
+/* ── PROMO STRIP ── */
+.promo-strip{display:flex;gap:10px;overflow-x:auto;padding:12px 16px;max-width:480px;margin:0 auto;scrollbar-width:none}
+.promo-strip::-webkit-scrollbar{display:none}
+.promo-card{flex-shrink:0;background:linear-gradient(135deg,#FEF2F0,#FDE8E5);border:1px solid var(--red-mid);border-radius:14px;padding:12px 14px;width:140px;cursor:pointer}
+.promo-card.blue{background:linear-gradient(135deg,#EFF6FF,#DBEAFE);border-color:#93C5FD}
+.promo-card.green{background:linear-gradient(135deg,#F0FDF4,#DCFCE7);border-color:#86EFAC}
+.promo-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--red);margin-bottom:4px}
+.promo-card.blue .promo-tag{color:#2563EB}
+.promo-card.green .promo-tag{color:var(--green)}
+.promo-title{font-size:12px;font-weight:600;color:var(--ink);line-height:1.3}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:4px;padding:12px 16px 0;max-width:480px;margin:0 auto;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;background:var(--white);border:1.5px solid var(--border);color:var(--muted);transition:all 0.15s}
+.tab.active{background:var(--red);border-color:var(--red);color:#fff;font-weight:600}
+
+/* ── SELECTOR CARD ── */
+.selector-card{background:var(--white);border-radius:16px;margin:12px 16px;padding:16px;box-shadow:0 1px 6px rgba(0,0,0,0.06);max-width:480px;margin:12px auto}
+.selector-card{margin:12px 16px}
+@media(min-width:512px){.selector-card{margin:12px auto;max-width:480px}}
+.sel-title{font-size:15px;font-weight:700;margin-bottom:12px;color:var(--ink)}
+.sel-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.sel-full{margin-bottom:10px}
+.field-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px}
+select,input[type=text],input[type=password],input[type=number]{width:100%;background:#F9FAFB;border:1.5px solid var(--border);color:var(--ink);padding:10px 12px;font-family:'Inter',sans-serif;font-size:14px;border-radius:10px;transition:border-color 0.15s;appearance:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-color:#F9FAFB}
+select:focus,input:focus{outline:none;border-color:var(--red);background:#fff}
+select option{background:#fff}
+.analyze-btn{width:100%;background:var(--red);color:#fff;border:none;padding:14px;border-radius:12px;font-family:'Inter',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.analyze-btn:hover{background:var(--red2)}
+.analyze-btn:disabled{background:#ccc;cursor:not-allowed}
+
+/* ── RESULTS ── */
+.results-wrap{display:none;max-width:480px;margin:0 auto;padding:0 16px 80px}
+.results-wrap.on{display:block}
+
+.result-car-card{background:var(--white);border-radius:16px;overflow:hidden;margin-top:12px;box-shadow:0 2px 10px rgba(0,0,0,0.07)}
+.car-img-wrap{position:relative;height:200px;background:#E5E7EB;overflow:hidden}
+.car-img-wrap img{width:100%;height:100%;object-fit:cover}
+.car-img-badge{position:absolute;top:10px;left:10px;background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
+.car-img-score{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.7);color:#fff;font-size:13px;font-weight:700;padding:5px 10px;border-radius:10px;backdrop-filter:blur(4px)}
+.car-info{padding:14px}
+.car-name{font-size:18px;font-weight:800;color:var(--ink);margin-bottom:2px}
+.car-year-tag{font-size:12px;color:var(--muted)}
+.car-price-row{display:flex;align-items:baseline;gap:8px;margin:10px 0}
+.car-price{font-size:22px;font-weight:800;color:var(--ink)}
+.car-price-sub{font-size:12px;color:var(--muted)}
+.car-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.ctag{background:#F3F4F6;border-radius:6px;padding:4px 8px;font-size:11px;font-weight:500;color:var(--muted)}
+.ctag.red{background:var(--red-soft);color:var(--red)}
+.ctag.green{background:#F0FDF4;color:var(--green)}
+
+/* ── SCORE GRID ── */
+.score-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0}
+.score-box{background:#F9FAFB;border-radius:10px;padding:10px 6px;text-align:center}
+.score-num{font-size:20px;font-weight:800;line-height:1}
+.score-num.g{color:var(--green)}.score-num.o{color:var(--yellow)}.score-num.r{color:var(--red)}
+.score-lbl{font-size:9px;color:var(--muted);margin-top:2px;line-height:1.2}
+
+/* ── SECTION CARDS ── */
+.info-card{background:var(--white);border-radius:16px;margin-top:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,0.05)}
+.info-card-head{padding:14px 16px 0;display:flex;align-items:center;gap:8px}
+.info-card-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.info-card-icon.red{background:var(--red-soft)}
+.info-card-icon.yellow{background:#FFFBEB}
+.info-card-icon.green{background:#F0FDF4}
+.info-card-icon.blue{background:#EFF6FF}
+.info-card-icon.purple{background:#F5F3FF}
+.info-card-title{font-size:14px;font-weight:700;color:var(--ink)}
+.info-card-body{padding:12px 16px 16px}
+
+.pc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pc-col-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.pc-col-head.g{color:var(--green)}.pc-col-head.r{color:var(--red)}
+.pc-li{font-size:12px;color:#374151;padding:5px 0;border-bottom:1px solid #F3F4F6;display:flex;gap:6px;line-height:1.4}
+.pc-li:last-child{border-bottom:none}
+.pc-mark{font-weight:700;flex-shrink:0}
+.pc-mark.g{color:var(--green)}.pc-mark.r{color:var(--red)}
+
+.ail-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #F3F4F6;align-items:flex-start}
+.ail-item:last-child{border-bottom:none}
+.ail-dot{width:8px;height:8px;background:var(--yellow);border-radius:2px;flex-shrink:0;margin-top:4px}
+.ail-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.ail-desc{font-size:12px;color:var(--muted);line-height:1.4}
+
+/* LIQ METER */
+.liq-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.liq-label{font-size:15px;font-weight:700}
+.liq-score{font-size:13px;color:var(--muted)}
+.liq-bar{display:flex;gap:3px;margin-bottom:8px}
+.liq-seg{flex:1;height:8px;border-radius:4px;background:#F3F4F6;transition:background 0.5s}
+.liq-seg.on{background:var(--green)}.liq-seg.on.mid{background:var(--yellow)}.liq-seg.on.lo{background:var(--red)}
+.liq-text{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* PRICE BARS */
+.price-item{margin-bottom:12px}
+.price-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+.price-row span{color:var(--muted)}
+.price-row strong{font-weight:700;color:var(--ink)}
+.pbar-bg{height:8px;background:#F3F4F6;border-radius:4px;overflow:hidden}
+.pbar-fg{height:100%;border-radius:4px;width:0;transition:width 1.3s cubic-bezier(0.16,1,0.3,1)}
+.pbar-fg.min{background:#86EFAC}.pbar-fg.avg{background:var(--yellow)}.pbar-fg.max{background:var(--red)}
+
+/* COMPARE */
+.compare-section{display:none}
+.compare-section.on{display:block}
+.cmp-vs{display:grid;grid-template-columns:1fr 32px 1fr;align-items:center;gap:4px;margin-bottom:12px}
+.cmp-vs-divider{text-align:center;font-weight:800;font-size:14px;color:var(--muted)}
+.cmp-col-head{font-size:12px;font-weight:700;color:var(--ink);text-align:center;padding:8px;background:#F9FAFB;border-radius:8px}
+.cmp-row{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:4px}
+.cmp-cell{background:#F9FAFB;border-radius:8px;padding:8px 10px;font-size:12px;color:var(--ink);text-align:center}
+.cmp-cell.better{background:#F0FDF4;color:var(--green);font-weight:600}
+.cmp-cell.worse{background:#FEF2F2;color:var(--red)}
+.cmp-row-label{font-size:11px;color:var(--muted);text-align:center;padding:4px 0}
+
+/* CREDIT CALC */
+.calc-row{margin-bottom:12px}
+.calc-result{background:var(--red-soft);border:1px solid var(--red-mid);border-radius:12px;padding:14px;text-align:center;margin-top:12px}
+.calc-result-main{font-size:22px;font-weight:800;color:var(--red);margin-bottom:2px}
+.calc-result-sub{font-size:12px;color:var(--muted)}
+.calc-btn{width:100%;background:#F3F4F6;color:var(--ink);border:none;padding:11px;border-radius:10px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;transition:background 0.15s}
+.calc-btn:hover{background:var(--border)}
+input[type=range]{width:100%;accent-color:var(--red);height:4px}
+
+/* TREND CHART */
+.trend-chart{display:flex;align-items:flex-end;gap:4px;height:80px;margin:10px 0}
+.trend-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.trend-bar{width:100%;border-radius:4px 4px 0 0;background:var(--red-mid);transition:height 0.8s;min-height:4px}
+.trend-bar.peak{background:var(--red)}
+.trend-label{font-size:9px;color:var(--muted)}
+.trend-val{font-size:9px;font-weight:600;color:var(--ink)}
+
+/* AI CHAT */
+.chat-section{display:none}
+.chat-section.on{display:block}
+.chat-messages{background:#F9FAFB;border-radius:12px;padding:12px;min-height:100px;max-height:260px;overflow-y:auto;margin-bottom:10px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:85%;padding:9px 12px;border-radius:12px;font-size:13px;line-height:1.5}
+.msg.user{background:var(--red);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.msg.ai{background:var(--white);color:var(--ink);align-self:flex-start;border-bottom-left-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+.msg.typing{color:var(--muted);font-style:italic}
+.chat-input-row{display:flex;gap:8px}
+.chat-input{flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-family:'Inter',sans-serif;font-size:13px}
+.chat-send{background:var(--red);color:#fff;border:none;padding:10px 16px;border-radius:10px;font-weight:600;cursor:pointer;font-size:13px}
+.chat-send:hover{background:var(--red2)}
+.quick-questions{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.qq{background:var(--white);border:1.5px solid var(--border);color:var(--ink);font-size:11px;padding:5px 10px;border-radius:20px;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s}
+.qq:hover{border-color:var(--red);color:var(--red);background:var(--red-soft)}
+
+/* ALTERNATIVES */
+.alt-card{background:#F9FAFB;border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.alt-card:last-child{margin-bottom:0}
+.alt-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.alt-tag{font-size:11px;color:var(--muted)}
+.alt-price{font-size:14px;font-weight:700;color:var(--ink);text-align:right}
+.alt-diff{font-size:11px;font-weight:600;text-align:right}
+.alt-diff.cheaper{color:var(--green)}.alt-diff.pricier{color:var(--red)}
+
+/* VERDICT */
+.verdict-text{font-size:14px;color:#374151;line-height:1.65;font-style:italic;border-left:3px solid var(--red);padding-left:12px;margin-bottom:12px}
+.tags-row{display:flex;flex-wrap:wrap;gap:6px}
+.vtag{background:var(--red-soft);border:1px solid var(--red-mid);color:var(--red);font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px}
+.vtag.kz{background:#F0FDF4;border-color:#86EFAC;color:var(--green)}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);display:flex;max-width:480px;margin:0 auto;z-index:100}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 0;cursor:pointer;color:var(--muted);font-size:10px;font-weight:500;transition:color 0.15s;gap:3px}
+.nav-item.active{color:var(--red)}
+.nav-icon{font-size:20px}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:flex-end;justify-content:center}
+.modal-overlay.on{display:flex}
+.modal{background:var(--white);border-radius:20px 20px 0 0;padding:20px 16px 32px;width:100%;max-width:480px}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:14px}
+.modal-close{float:right;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted)}
+.save-btn{width:100%;background:var(--red);color:#fff;border:none;padding:13px;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:10px}
+
+/* LOADING */
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,0.9);z-index:150;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+.loading-overlay.on{display:flex}
+.spinner{width:44px;height:44px;border:3px solid var(--red-mid);border-top-color:var(--red);border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:14px;font-weight:600;color:var(--ink)}
+.loading-sub{font-size:12px;color:var(--muted)}
+
+.err-banner{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 14px;font-size:13px;color:#DC2626;margin-top:10px;display:none}
+
+.fade-in{opacity:0;transform:translateY(10px);animation:fi 0.35s forwards}
+@keyframes fi{to{opacity:1;transform:translateY(0)}}
+
+/* PAGE SECTIONS */
+.page{display:none}.page.on{display:block}
+
+/* 2026 REFRESH */
+:root{
+  --red:#E15B37;
+  --red2:#C94828;
+  --red-soft:#FFF1EC;
+  --red-mid:#F2C9BD;
+  --bg:#F6F1EA;
+  --white:#FFFFFF;
+  --ink:#171B2A;
+  --muted:#697180;
+  --border:#E8DED2;
+  --card:rgba(255,255,255,0.88);
+  --green:#188B5B;
+  --yellow:#C78512;
+  --shell:rgba(255,255,255,0.78);
+  --shadow-lg:0 26px 80px rgba(80,45,26,0.14);
+  --shadow-md:0 14px 36px rgba(58,34,23,0.10);
+  --shadow-sm:0 8px 18px rgba(30,24,19,0.08);
+  --bottom-nav-height:92px;
+  --bottom-nav-offset:14px;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Manrope',sans-serif;
+  background:
+    radial-gradient(circle at top left,rgba(225,91,55,0.18),transparent 26%),
+    radial-gradient(circle at top right,rgba(242,201,189,0.35),transparent 24%),
+    linear-gradient(180deg,#FBF7F2 0%,#F6F1EA 48%,#EFE6DA 100%);
+  color:var(--ink);
+  overflow-x:hidden;
+}
+body.intro-active{
+  overflow:hidden;
+}
+.app-shell{
+  opacity:1;
+  transform:none;
+  transition:opacity 0.7s ease,transform 0.7s ease,filter 0.7s ease;
+}
+body.intro-active .app-shell{
+  opacity:0.18;
+  transform:scale(1.015);
+  filter:blur(10px);
+  pointer-events:none;
+}
+.intro-overlay{
+  position:fixed;
+  inset:0;
+  z-index:320;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px 16px calc(34px + env(safe-area-inset-bottom, 0px));
+  background:
+    radial-gradient(circle at 20% 20%,rgba(255,255,255,0.28),transparent 22%),
+    radial-gradient(circle at 85% 15%,rgba(124,197,255,0.24),transparent 20%),
+    linear-gradient(160deg,#1A1F32 0%,#26304A 28%,#DA6138 73%,#F19C4A 100%);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity 0.55s ease,visibility 0.55s ease;
+}
+.intro-overlay.on{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+.intro-backdrop{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+}
+.intro-orb{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(12px);
+  opacity:0.45;
+  animation:introFloat 10s ease-in-out infinite;
+}
+.intro-orb.one{
+  width:220px;height:220px;top:-50px;right:-40px;
+  background:rgba(255,255,255,0.18);
+}
+.intro-orb.two{
+  width:180px;height:180px;bottom:80px;left:-50px;
+  background:rgba(99,194,255,0.18);
+  animation-delay:-3s;
+}
+.intro-orb.three{
+  width:120px;height:120px;top:38%;left:70%;
+  background:rgba(255,219,161,0.22);
+  animation-delay:-6s;
+}
+.intro-card{
+  position:relative;
+  width:min(100%,520px);
+  padding:28px 22px 22px;
+  border-radius:30px;
+  background:rgba(255,255,255,0.14);
+  border:1px solid rgba(255,255,255,0.22);
+  box-shadow:0 30px 80px rgba(8,11,21,0.30);
+  backdrop-filter:blur(20px);
+  color:#fff;
+  overflow:hidden;
+}
+.intro-copy{
+  position:relative;
+  z-index:1;
+}
+.intro-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,0.12),transparent 35%,rgba(255,255,255,0.05));
+  pointer-events:none;
+}
+.intro-badge{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.16);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
+.intro-title{
+  position:relative;
+  font-size:34px;
+  line-height:1.03;
+  letter-spacing:-1.7px;
+  font-weight:800;
+  margin-bottom:12px;
+  max-width:360px;
+}
+.intro-subtitle{
+  position:relative;
+  font-size:14px;
+  line-height:1.65;
+  color:rgba(255,255,255,0.84);
+  max-width:390px;
+  margin-bottom:20px;
+}
+.intro-grid{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:20px;
+}
+.intro-feature{
+  padding:14px 14px 13px;
+  border-radius:22px;
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.14);
+  min-height:104px;
+  opacity:0;
+  transform:translateY(16px);
+  animation:introFeatureIn 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.intro-feature:nth-child(1){animation-delay:0.18s}
+.intro-feature:nth-child(2){animation-delay:0.28s}
+.intro-feature:nth-child(3){animation-delay:0.38s}
+.intro-feature:nth-child(4){animation-delay:0.48s}
+.intro-icon{
+  font-size:20px;
+  margin-bottom:10px;
+}
+.intro-feature-title{
+  font-size:13px;
+  font-weight:800;
+  margin-bottom:5px;
+}
+.intro-feature-text{
+  font-size:11px;
+  line-height:1.45;
+  color:rgba(255,255,255,0.78);
+}
+.intro-actions{
+  position:relative;
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.intro-cta,.intro-skip{
+  border:none;
+  cursor:pointer;
+  font-family:'Manrope',sans-serif;
+}
+.intro-cta{
+  flex:1;
+  background:#fff;
+  color:var(--ink);
+  border-radius:18px;
+  padding:14px 16px;
+  font-size:14px;
+  font-weight:900;
+  letter-spacing:-0.2px;
+  box-shadow:0 18px 34px rgba(10,12,24,0.16);
+}
+.intro-cta:hover{
+  transform:translateY(-2px);
+}
+.intro-skip{
+  background:rgba(255,255,255,0.08);
+  color:rgba(255,255,255,0.88);
+  border-radius:16px;
+  padding:13px 14px;
+  font-size:12px;
+  font-weight:800;
+  border:1px solid rgba(255,255,255,0.14);
+}
+.intro-hint{
+  position:relative;
+  margin-top:14px;
+  font-size:11px;
+  color:rgba(255,255,255,0.68);
+  text-align:center;
+}
+.intro-progress{
+  position:relative;
+  width:100%;
+  height:4px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.14);
+  overflow:hidden;
+  margin:0 0 16px;
+}
+.intro-progress-bar{
+  width:0;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#fff,rgba(255,255,255,0.58));
+  animation:introProgress 10s linear forwards;
+}
+.intro-overlay.leaving{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+.intro-stage{
+  display:none;
+  position:relative;
+  z-index:1;
+  flex-direction:column;
+  gap:14px;
+}
+.page{
+  padding-bottom:calc(var(--bottom-nav-height) + var(--bottom-nav-offset) + env(safe-area-inset-bottom, 0px) + 28px);
+}
+body::before,
+body::after{
+  content:'';
+  position:fixed;
+  inset:auto;
+  width:240px;
+  height:240px;
+  border-radius:50%;
+  filter:blur(70px);
+  z-index:-1;
+  opacity:0.5;
+}
+body::before{top:-70px;right:-70px;background:rgba(225,91,55,0.18)}
+body::after{bottom:90px;left:-90px;background:rgba(52,116,255,0.12)}
+img{display:block}
+button,input,select{transition:border-color 0.24s ease,background 0.24s ease,transform 0.24s ease,box-shadow 0.24s ease,color 0.24s ease}
+.header{
+  background:rgba(251,247,242,0.74);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(232,222,210,0.82);
+  box-shadow:none;
+}
+.header-inner,.hero-banner,.cats,.promo-strip,.tabs,.results-wrap,.bottom-nav{max-width:520px}
+.header-inner{padding:14px 18px}
+.logo{
+  font-size:23px;
+  letter-spacing:-1px;
+  color:var(--red);
+}
+.header-key-btn{
+  background:rgba(255,255,255,0.72);
+  border:1px solid rgba(225,91,55,0.22);
+  color:var(--ink);
+  border-radius:999px;
+  padding:9px 14px;
+  box-shadow:var(--shadow-sm);
+}
+.header-key-btn:hover{
+  transform:translateY(-1px);
+  border-color:rgba(225,91,55,0.4);
+}
+.hero-banner{
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(135deg,rgba(15,23,42,0.08),transparent 45%),
+    linear-gradient(135deg,var(--red) 0%,#C94B2C 52%,#F09341 100%);
+  padding:30px 18px 28px;
+  border-radius:0 0 30px 30px;
+  box-shadow:var(--shadow-lg);
+}
+.hero-banner::before,
+.hero-banner::after{
+  content:'';
+  position:absolute;
+  border-radius:999px;
+  background:rgba(255,255,255,0.12);
+}
+.hero-banner::before{width:190px;height:190px;right:-32px;top:-44px}
+.hero-banner::after{width:120px;height:120px;left:-32px;bottom:-48px}
+.hero-banner h1{
+  position:relative;
+  font-size:30px;
+  letter-spacing:-1.4px;
+  margin-bottom:10px;
+}
+.hero-banner p{
+  position:relative;
+  font-size:14px;
+  line-height:1.55;
+  max-width:320px;
+  opacity:0.92;
+  margin-bottom:16px;
+}
+.hero-pills{
+  position:relative;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:18px;
+}
+.hero-pill{
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.24);
+  color:#fff;
+  border-radius:999px;
+  padding:7px 11px;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:0.2px;
+  backdrop-filter:blur(8px);
+}
+.hero-search{position:relative;z-index:1}
+.hero-search input{
+  background:rgba(255,255,255,0.9);
+  border:1px solid rgba(255,255,255,0.34);
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+.hero-search-btn{
+  background:rgba(255,255,255,0.16);
+  border:1px solid rgba(255,255,255,0.45);
+  border-radius:14px;
+  box-shadow:0 12px 28px rgba(0,0,0,0.10);
+}
+.hero-search-btn:hover{transform:translateY(-1px);background:rgba(255,255,255,0.22)}
+.cats{gap:10px;padding:18px 16px 0}
+.cat{
+  background:rgba(255,255,255,0.74);
+  border:1px solid rgba(232,222,210,0.9);
+  backdrop-filter:blur(12px);
+  border-radius:18px;
+  padding:13px 7px;
+  box-shadow:var(--shadow-sm);
+  position:relative;
+  z-index:3;
+}
+.cat:hover{
+  transform:translateY(-2px);
+  border-color:rgba(225,91,55,0.35);
+  background:rgba(255,248,245,0.92);
+}
+.cat.active{
+  border-color:rgba(225,91,55,0.55);
+  background:linear-gradient(180deg,rgba(255,245,241,0.98),rgba(255,238,232,0.92));
+}
+.cat-label{font-size:10px;font-weight:700}
+.promo-strip{gap:12px;padding:14px 16px}
+.promo-card{
+  width:164px;
+  padding:14px 15px;
+  border-radius:22px;
+  box-shadow:var(--shadow-sm);
+  border:1px solid rgba(225,91,55,0.18);
+  transition:transform 0.24s ease,box-shadow 0.24s ease,border-color 0.24s ease;
+  position:relative;
+  overflow:hidden;
+}
+.promo-card:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-md);
+}
+.promo-card::after{
+  content:'';
+  position:absolute;
+  right:-10px;
+  bottom:-12px;
+  width:74px;
+  height:74px;
+  border-radius:24px;
+  background:rgba(255,255,255,0.24);
+}
+.promo-title{font-size:13px;font-weight:700}
+.promo-icon{
+  position:absolute;
+  right:16px;
+  top:16px;
+  font-size:28px;
+  opacity:0.92;
+}
+.tabs{gap:8px;padding:12px 16px 0}
+.tab{
+  background:rgba(255,255,255,0.72);
+  border:1px solid rgba(232,222,210,0.95);
+  border-radius:999px;
+  padding:10px 15px;
+  font-weight:700;
+  box-shadow:var(--shadow-sm);
+  position:relative;
+  z-index:3;
+}
+.tab:hover{
+  transform:translateY(-1px);
+  border-color:rgba(225,91,55,0.35);
+}
+.tab.active{
+  background:linear-gradient(135deg,var(--red),#F08D40);
+  border-color:transparent;
+  box-shadow:0 14px 26px rgba(225,91,55,0.28);
+}
+.selector-card{
+  position:relative;
+  background:var(--card);
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,0.62);
+  border-radius:28px;
+  padding:18px;
+  box-shadow:var(--shadow-md);
+  overflow:hidden;
+  z-index:3;
+}
+.selector-card.tab-panel{
+  margin-bottom:18px;
+}
+.selector-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,0.38),transparent 26%);
+  pointer-events:none;
+}
+.sel-title{font-size:17px;letter-spacing:-0.3px}
+.field-label{font-size:10px;font-weight:800}
+select,input[type=text],input[type=password],input[type=number],.chat-input{
+  background:rgba(255,255,255,0.9);
+  border:1px solid rgba(221,214,204,0.92);
+  border-radius:14px;
+  padding:12px 13px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.6);
+}
+select:focus,input:focus,.chat-input:focus{
+  border-color:rgba(225,91,55,0.55);
+  box-shadow:0 0 0 4px rgba(225,91,55,0.10);
+}
+.tab-panel{display:none;opacity:0;transform:translateY(18px) scale(0.985)}
+.tab-panel.on{
+  display:block;
+  animation:panelIn 0.38s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.tab-panel.leaving{
+  display:block;
+  animation:panelOut 0.2s ease forwards;
+  pointer-events:none;
+}
+.analyze-btn,.save-btn,.chat-send{
+  background:linear-gradient(135deg,var(--red),#F08D40);
+  border:none;
+  border-radius:16px;
+  box-shadow:0 16px 30px rgba(225,91,55,0.22);
+}
+.analyze-btn:hover,.save-btn:hover,.chat-send:hover{
+  transform:translateY(-2px);
+  box-shadow:0 20px 36px rgba(225,91,55,0.28);
+  background:linear-gradient(135deg,var(--red2),#E97D34);
+}
+.calc-btn,.qq{
+  border-radius:999px;
+  box-shadow:var(--shadow-sm);
+}
+.qq:hover,.calc-btn:hover{
+  transform:translateY(-1px);
+}
+.results-wrap{
+  display:none;
+  max-width:520px;
+  padding:0 16px calc(var(--bottom-nav-height) + var(--bottom-nav-offset) + env(safe-area-inset-bottom, 0px) + 36px);
+}
+.results-wrap.on{
+  display:block;
+  animation:panelIn 0.45s cubic-bezier(0.22,1,0.36,1) both;
+}
+.result-car-card{
+  margin-top:14px;
+  border-radius:30px;
+  background:rgba(255,255,255,0.9);
+  border:1px solid rgba(255,255,255,0.72);
+  box-shadow:var(--shadow-lg);
+}
+.car-img-wrap{
+  height:260px;
+  background:linear-gradient(135deg,#E8D8CB 0%,#F7E8DE 48%,#E1EDF8 100%);
+}
+.car-img-wrap::before{
+  content:'';
+  position:absolute;
+  inset:auto 0 0;
+  height:50%;
+  background:linear-gradient(180deg,transparent 0%,rgba(23,27,42,0.42) 100%);
+  pointer-events:none;
+}
+.car-img-wrap.loading::after{
+  content:'Подбираем фото автомобиля...';
+  position:absolute;
+  left:16px;
+  bottom:16px;
+  background:rgba(255,255,255,0.78);
+  color:var(--ink);
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:11px;
+  font-weight:700;
+  backdrop-filter:blur(10px);
+}
+.car-img-wrap img{
+  opacity:0;
+  transform:scale(1.04);
+  transition:opacity 0.45s ease,transform 0.75s cubic-bezier(0.22,1,0.36,1);
+}
+.car-img-wrap img.is-ready{
+  opacity:1;
+  transform:none;
+}
+.car-img-badge,.car-img-score{
+  top:14px;
+  border-radius:999px;
+  backdrop-filter:blur(10px);
+}
+.car-img-badge{left:14px;background:rgba(255,255,255,0.88);color:var(--ink)}
+.car-img-score{right:14px;background:rgba(17,24,39,0.72)}
+.car-info{padding:18px}
+.car-name{font-size:24px;letter-spacing:-0.7px}
+.car-year-tag{font-size:13px}
+.car-price-row{margin:12px 0}
+.car-price{font-size:28px;letter-spacing:-1px}
+.ctag,.vtag{
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:11px;
+  font-weight:700;
+}
+.score-grid{gap:8px}
+.score-box{
+  background:linear-gradient(180deg,rgba(255,255,255,0.88),rgba(247,243,238,0.95));
+  border:1px solid rgba(232,222,210,0.92);
+  border-radius:18px;
+  padding:12px 8px;
+}
+.score-num{font-size:24px}
+.score-lbl{font-size:10px;font-weight:700}
+.details-shell{margin-top:14px}
+.detail-nav{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  padding-bottom:8px;
+}
+.detail-nav::-webkit-scrollbar{display:none}
+.detail-tab{
+  flex-shrink:0;
+  background:rgba(255,255,255,0.72);
+  border:1px solid rgba(232,222,210,0.95);
+  color:var(--muted);
+  font-family:'Manrope',sans-serif;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:0.2px;
+  border-radius:999px;
+  padding:10px 14px;
+  cursor:pointer;
+  box-shadow:var(--shadow-sm);
+}
+.detail-tab:hover{transform:translateY(-1px);color:var(--ink)}
+.detail-tab.active{
+  background:linear-gradient(135deg,var(--ink),#2E364F);
+  border-color:transparent;
+  color:#fff;
+  box-shadow:0 14px 26px rgba(23,27,42,0.18);
+}
+.detail-pane{display:none;opacity:0;transform:translateY(16px)}
+.detail-pane.on{
+  display:block;
+  animation:paneIn 0.34s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.info-card{
+  border-radius:24px;
+  margin-top:12px;
+  background:rgba(255,255,255,0.9);
+  border:1px solid rgba(255,255,255,0.68);
+  box-shadow:var(--shadow-md);
+}
+.info-card-head{padding:16px 18px 0}
+.info-card-icon{width:32px;height:32px;border-radius:12px}
+.info-card-title{font-size:15px;letter-spacing:-0.2px}
+.info-card-body{padding:14px 18px 18px}
+.pc-li,.liq-text,.verdict-text,.ail-desc{font-size:13px}
+.alt-card{
+  background:linear-gradient(180deg,rgba(247,244,240,0.9),rgba(255,255,255,0.96));
+  border:1px solid rgba(232,222,210,0.9);
+  border-radius:18px;
+}
+.chat-messages{
+  background:linear-gradient(180deg,rgba(248,245,241,0.9),rgba(255,255,255,0.96));
+  border:1px solid rgba(232,222,210,0.9);
+  border-radius:20px;
+}
+.msg{
+  border-radius:16px;
+  box-shadow:var(--shadow-sm);
+}
+.bottom-nav{
+  left:12px;
+  right:12px;
+  bottom:14px;
+  width:auto;
+  background:rgba(255,255,255,0.82);
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,0.72);
+  border-radius:24px;
+  box-shadow:0 20px 44px rgba(23,27,42,0.12);
+  padding:6px 0 calc(8px + env(safe-area-inset-bottom, 0px));
+  min-height:calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
+}
+.nav-item{
+  padding:9px 0 10px;
+  font-weight:700;
+}
+.nav-item.active{color:var(--red)}
+.nav-icon{font-size:18px}
+.modal-overlay{
+  display:flex;
+  opacity:0;
+  pointer-events:none;
+  background:rgba(23,27,42,0.42);
+  transition:opacity 0.24s ease;
+}
+.modal-overlay.on{
+  opacity:1;
+  pointer-events:auto;
+}
+.modal{
+  margin:0 12px 12px;
+  border-radius:28px;
+  background:rgba(255,255,255,0.94);
+  box-shadow:var(--shadow-lg);
+  transform:translateY(24px) scale(0.98);
+  transition:transform 0.26s cubic-bezier(0.22,1,0.36,1);
+}
+.modal-overlay.on .modal{transform:translateY(0) scale(1)}
+.loading-overlay{
+  display:flex;
+  opacity:0;
+  pointer-events:none;
+  background:rgba(247,242,235,0.82);
+  backdrop-filter:blur(16px);
+  transition:opacity 0.22s ease;
+}
+.loading-overlay.on{
+  opacity:1;
+  pointer-events:auto;
+}
+.spinner{border-width:4px;box-shadow:0 10px 30px rgba(225,91,55,0.12)}
+.fade-in{opacity:0;transform:translateY(14px);animation:fi 0.4s cubic-bezier(0.22,1,0.36,1) forwards}
+@keyframes fi{to{opacity:1;transform:translateY(0)}}
+@keyframes panelIn{
+  from{opacity:0;transform:translateY(18px) scale(0.985)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes panelOut{
+  from{opacity:1;transform:translateY(0) scale(1)}
+  to{opacity:0;transform:translateY(8px) scale(0.992)}
+}
+@keyframes paneIn{
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes introFloat{
+  0%,100%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(0,-14px,0) scale(1.04)}
+}
+@keyframes introFeatureIn{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes introProgress{
+  from{width:0}
+  to{width:100%}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation:none !important;
+    transition:none !important;
+    scroll-behavior:auto !important;
+  }
+}
+.analyze-support{display:none}
+.analyze-support.on{display:block}
+.feature-card{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,0.94),rgba(252,249,246,0.9)),
+    var(--card);
+}
+.feature-shell{display:grid;gap:12px}
+.section-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:8px;
+  padding:7px 11px;
+  border-radius:999px;
+  background:rgba(23,27,42,0.06);
+  color:var(--ink);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:0.35px;
+  text-transform:uppercase;
+}
+.section-note{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.55;
+  margin-top:4px;
+}
+.budget-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+.budget-grid .full{grid-column:1/-1}
+.recommend-btn-row{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+}
+.ghost-btn,
+.mini-btn{
+  border:none;
+  font-family:'Manrope',sans-serif;
+  cursor:pointer;
+}
+.ghost-btn{
+  background:rgba(255,255,255,0.8);
+  color:var(--ink);
+  border:1px solid rgba(232,222,210,0.9);
+  border-radius:999px;
+  padding:10px 14px;
+  font-size:12px;
+  font-weight:800;
+  box-shadow:var(--shadow-sm);
+}
+.ghost-btn:hover{transform:translateY(-1px);border-color:rgba(225,91,55,0.32)}
+.ghost-btn.active{
+  background:linear-gradient(135deg,var(--ink),#2E364F);
+  color:#fff;
+  border-color:transparent;
+}
+.budget-results{
+  display:grid;
+  gap:10px;
+  margin-top:16px;
+}
+.recommend-card{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(180deg,rgba(255,255,255,0.96),rgba(247,243,238,0.94));
+  border:1px solid rgba(232,222,210,0.92);
+  border-radius:22px;
+  padding:15px;
+  box-shadow:var(--shadow-sm);
+}
+.recommend-card::before{
+  content:'';
+  position:absolute;
+  inset:0 auto auto 0;
+  width:100%;
+  height:3px;
+  background:linear-gradient(90deg,var(--red),#F0A04B,#7CC5FF);
+  opacity:0.85;
+}
+.recommend-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+.recommend-name{
+  font-size:16px;
+  font-weight:800;
+  letter-spacing:-0.3px;
+  color:var(--ink);
+}
+.recommend-meta{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.45;
+}
+.recommend-price{
+  font-size:15px;
+  font-weight:800;
+  color:var(--ink);
+  white-space:nowrap;
+}
+.recommend-reason{
+  font-size:13px;
+  color:#465065;
+  line-height:1.55;
+  margin:8px 0 10px;
+}
+.recommend-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+.soft-tag{
+  background:rgba(225,91,55,0.1);
+  color:var(--red);
+  border:1px solid rgba(225,91,55,0.15);
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:11px;
+  font-weight:800;
+}
+.soft-tag.cool{
+  background:rgba(79,135,255,0.1);
+  border-color:rgba(79,135,255,0.14);
+  color:#3E68D7;
+}
+.soft-tag.green{
+  background:rgba(24,139,91,0.1);
+  border-color:rgba(24,139,91,0.14);
+  color:var(--green);
+}
+.empty-state{
+  background:linear-gradient(180deg,rgba(255,255,255,0.92),rgba(247,243,238,0.94));
+  border:1px dashed rgba(221,214,204,0.96);
+  border-radius:22px;
+  padding:18px 16px;
+  text-align:center;
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.6;
+}
+.garage-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+.garage-switches{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.garage-switch{
+  border:none;
+  background:rgba(255,255,255,0.76);
+  color:var(--muted);
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:12px;
+  font-weight:800;
+  border:1px solid rgba(232,222,210,0.9);
+  box-shadow:var(--shadow-sm);
+  cursor:pointer;
+}
+.garage-switch.active{
+  background:linear-gradient(135deg,var(--red),#F09341);
+  color:#fff;
+  border-color:transparent;
+}
+.garage-shelf{
+  display:grid;
+  gap:10px;
+}
+.garage-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:14px 14px 14px 15px;
+  border-radius:20px;
+  background:linear-gradient(180deg,rgba(255,255,255,0.97),rgba(248,244,239,0.95));
+  border:1px solid rgba(232,222,210,0.92);
+  box-shadow:var(--shadow-sm);
+  cursor:pointer;
+}
+.garage-item:hover{transform:translateY(-1px)}
+.garage-main{min-width:0}
+.garage-title{
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:-0.2px;
+  color:var(--ink);
+  margin-bottom:3px;
+}
+.garage-meta{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.45;
+}
+.garage-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0;
+}
+.mini-btn{
+  background:rgba(23,27,42,0.06);
+  color:var(--ink);
+  border-radius:999px;
+  padding:8px 11px;
+  font-size:11px;
+  font-weight:800;
+}
+.mini-btn.danger{
+  background:rgba(225,91,55,0.12);
+  color:var(--red);
+}
+.mini-btn:hover{transform:translateY(-1px)}
+.status-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+.action-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:12px;
+}
+.action-row .ghost-btn,
+.action-row .ghost-link{
+  flex:1 1 180px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+.ghost-link{
+  text-decoration:none;
+}
+.status-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border-radius:999px;
+  padding:9px 13px;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:0.15px;
+}
+.status-pill.buy{
+  background:rgba(24,139,91,0.12);
+  color:var(--green);
+}
+.status-pill.maybe{
+  background:rgba(199,133,18,0.12);
+  color:var(--yellow);
+}
+.status-pill.skip{
+  background:rgba(225,91,55,0.12);
+  color:var(--red);
+}
+.detail-pane-grid{
+  display:grid;
+  gap:12px;
+}
+.ownership-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.ownership-item{
+  background:linear-gradient(180deg,rgba(248,245,241,0.95),rgba(255,255,255,0.98));
+  border:1px solid rgba(232,222,210,0.9);
+  border-radius:18px;
+  padding:12px;
+}
+.ownership-label{
+  font-size:11px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:0.4px;
+  margin-bottom:6px;
+  font-weight:800;
+}
+.ownership-value{
+  font-size:17px;
+  font-weight:900;
+  color:var(--ink);
+  letter-spacing:-0.4px;
+}
+.ownership-help{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:4px;
+  line-height:1.45;
+}
+.fit-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.fit-chip{
+  background:rgba(23,27,42,0.06);
+  color:var(--ink);
+  border-radius:999px;
+  padding:8px 11px;
+  font-size:12px;
+  font-weight:800;
+}
+.glow-card{
+  position:relative;
+}
+.glow-card::after{
+  content:'';
+  position:absolute;
+  inset:-1px;
+  border-radius:inherit;
+  padding:1px;
+  background:linear-gradient(135deg,rgba(255,255,255,0.5),rgba(225,91,55,0.08),rgba(124,197,255,0.1));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.hero-desktop-stack,
+.desktop-showcase{
+  display:none;
+}
+.hero-desktop-stack{
+  position:absolute;
+  right:22px;
+  top:28px;
+  width:210px;
+  gap:10px;
+  z-index:2;
+}
+.hero-stat{
+  background:rgba(255,255,255,0.14);
+  border:1px solid rgba(255,255,255,0.18);
+  border-radius:20px;
+  padding:12px 13px;
+  backdrop-filter:blur(12px);
+  box-shadow:0 20px 40px rgba(16,18,31,0.14);
+}
+.hero-stat-label{
+  font-size:10px;
+  font-weight:800;
+  color:rgba(255,255,255,0.75);
+  text-transform:uppercase;
+  letter-spacing:0.45px;
+  margin-bottom:7px;
+}
+.hero-stat-value{
+  font-size:24px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:-0.7px;
+  color:#fff;
+  margin-bottom:6px;
+}
+.hero-stat-text{
+  font-size:11px;
+  line-height:1.45;
+  color:rgba(255,255,255,0.8);
+}
+.hero-wave{
+  position:relative;
+  height:54px;
+  overflow:hidden;
+}
+.hero-wave::before{
+  content:'';
+  position:absolute;
+  inset:auto 0 0;
+  height:42px;
+  background:
+    radial-gradient(circle at 10% 70%,rgba(255,255,255,0.85) 0 3px,transparent 4px),
+    radial-gradient(circle at 28% 52%,rgba(255,255,255,0.58) 0 3px,transparent 4px),
+    radial-gradient(circle at 46% 72%,rgba(255,255,255,0.82) 0 3px,transparent 4px),
+    radial-gradient(circle at 68% 30%,rgba(255,255,255,0.52) 0 3px,transparent 4px),
+    radial-gradient(circle at 88% 62%,rgba(255,255,255,0.86) 0 3px,transparent 4px);
+  opacity:0.9;
+}
+.hero-wave svg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  opacity:0.88;
+}
+.desktop-showcase{
+  position:relative;
+  background:linear-gradient(160deg,rgba(23,27,42,0.96),rgba(32,43,72,0.94));
+  color:#fff;
+  border-radius:34px;
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 34px 90px rgba(14,18,31,0.22);
+  overflow:hidden;
+  min-height:560px;
+}
+.desktop-showcase.is-hidden{
+  display:none !important;
+}
+.desktop-showcase::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,0.08),transparent 22%),
+    radial-gradient(circle at 78% 20%,rgba(225,91,55,0.32),transparent 22%),
+    radial-gradient(circle at 20% 75%,rgba(124,197,255,0.18),transparent 28%);
+}
+.desktop-showcase::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,rgba(255,255,255,0.06) 1px,transparent 1px),
+    linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px);
+  background-size:28px 28px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,0.8),transparent 92%);
+  opacity:0.28;
+}
+.showcase-inner{
+  position:relative;
+  z-index:1;
+  padding:28px 26px;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+.showcase-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.08);
+  color:rgba(255,255,255,0.82);
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:0.4px;
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
+.showcase-title{
+  font-size:34px;
+  line-height:1.04;
+  letter-spacing:-1.4px;
+  font-weight:900;
+  max-width:430px;
+  margin-bottom:12px;
+}
+.showcase-text{
+  font-size:14px;
+  line-height:1.65;
+  color:rgba(255,255,255,0.74);
+  max-width:440px;
+  margin-bottom:24px;
+}
+.showcase-panels{
+  display:grid;
+  grid-template-columns:1.1fr 0.9fr;
+  gap:14px;
+  flex:1;
+}
+.showcase-panel{
+  position:relative;
+  border-radius:26px;
+  overflow:hidden;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.showcase-panel.primary{
+  padding:22px 20px;
+}
+.showcase-panel.secondary{
+  padding:18px 18px 20px;
+}
+.showcase-chart{
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+  height:180px;
+  margin-top:20px;
+}
+.showcase-bar{
+  flex:1;
+  border-radius:16px 16px 6px 6px;
+  background:linear-gradient(180deg,#F7B35A,#E15B37);
+  box-shadow:0 18px 34px rgba(225,91,55,0.22);
+  animation:desktopPulse 6s ease-in-out infinite;
+}
+.showcase-bar:nth-child(2){animation-delay:-0.6s}
+.showcase-bar:nth-child(3){animation-delay:-1.2s}
+.showcase-bar:nth-child(4){animation-delay:-1.8s}
+.showcase-bar:nth-child(5){animation-delay:-2.4s}
+.showcase-panel-title{
+  font-size:15px;
+  font-weight:800;
+  letter-spacing:-0.3px;
+}
+.showcase-list{
+  display:grid;
+  gap:10px;
+  margin-top:16px;
+}
+.showcase-line{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px 13px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.06);
+  color:rgba(255,255,255,0.82);
+  font-size:12px;
+}
+.showcase-line strong{
+  color:#fff;
+}
+.showcase-mini-card{
+  margin-top:auto;
+  padding:14px 15px;
+  border-radius:20px;
+  background:linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.08));
+  border:1px solid rgba(255,255,255,0.1);
+}
+.showcase-mini-kicker{
+  font-size:10px;
+  font-weight:800;
+  color:rgba(255,255,255,0.62);
+  text-transform:uppercase;
+  letter-spacing:0.45px;
+  margin-bottom:6px;
+}
+.showcase-mini-title{
+  font-size:18px;
+  font-weight:900;
+  margin-bottom:4px;
+}
+.showcase-mini-text{
+  font-size:12px;
+  color:rgba(255,255,255,0.72);
+  line-height:1.55;
+}
+@keyframes desktopPulse{
+  0%,100%{transform:translateY(0);filter:saturate(1)}
+  50%{transform:translateY(-8px);filter:saturate(1.15)}
+}
+@media(min-width:1024px){
+  body{
+    background:
+      radial-gradient(circle at 10% 10%,rgba(225,91,55,0.18),transparent 20%),
+      radial-gradient(circle at 88% 14%,rgba(124,197,255,0.14),transparent 22%),
+      linear-gradient(180deg,#FBF7F2 0%,#F4EEE6 44%,#ECE3D5 100%);
+  }
+  body::before{top:60px;right:8%;width:420px;height:420px;opacity:0.35}
+  body::after{bottom:160px;left:6%;width:360px;height:360px;opacity:0.28}
+  .header-inner{
+    max-width:1380px;
+    padding:18px 28px;
+  }
+  .page,
+  .page.on{
+    max-width:1380px;
+    margin:0 auto;
+    padding:28px 28px 96px;
+    display:block;
+    position:relative;
+  }
+  .hero-banner{
+    max-width:none;
+    min-height:340px;
+    padding:42px 280px 40px 34px;
+    border-radius:34px;
+    margin:0;
+    z-index:4;
+  }
+  .hero-banner h1{
+    font-size:44px;
+    max-width:540px;
+  }
+  .hero-banner p{
+    font-size:15px;
+    max-width:420px;
+  }
+  .hero-banner::before{width:260px;height:260px;right:40px;top:32px;opacity:0.18}
+  .hero-banner::after{width:220px;height:220px;left:auto;right:180px;bottom:-80px;opacity:0.12}
+  .hero-search{
+    max-width:620px;
+  }
+  .hero-desktop-stack{
+    display:grid;
+  }
+  .desktop-showcase{
+    display:none !important;
+  }
+  .promo-strip{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:16px;
+    padding:0;
+    margin:16px 0 0;
+    max-width:none;
+    overflow:visible;
+    position:relative;
+    z-index:4;
+  }
+  .promo-card{
+    width:auto;
+    min-height:104px;
+    padding:14px 56px 14px 16px;
+  }
+  .promo-title{
+    font-size:15px;
+    line-height:1.28;
+    max-width:200px;
+  }
+  .cats{
+    grid-template-columns:repeat(4,minmax(110px,1fr));
+    padding:0;
+    gap:14px;
+    max-width:none;
+    margin:16px 0 0;
+    position:relative;
+    z-index:4;
+  }
+  .tabs{
+    padding:0;
+    margin:16px 0 0;
+    max-width:none;
+    gap:10px;
+    flex-wrap:wrap;
+    position:relative;
+    z-index:4;
+  }
+  .selector-card,
+  .results-wrap{
+    max-width:none;
+    margin-top:18px;
+  }
+  #analyzeSupport .selector-card{
+    margin-top:0;
+    margin-bottom:18px;
+  }
+  .results-wrap{
+    padding:0 0 24px;
+    position:relative;
+    z-index:4;
+  }
+  .results-wrap.on{
+    display:block;
+  }
+  #tabCompare,
+  #tabCredit,
+  #tabTrend,
+  #tabChat{
+    position:relative;
+    top:auto;
+  }
+  .bottom-nav{
+    left:auto;
+    right:24px;
+    bottom:24px;
+    width:88px;
+    max-width:none;
+    flex-direction:column;
+    border-radius:28px;
+    padding:10px 0 calc(12px + env(safe-area-inset-bottom, 0px));
+    min-height:auto;
+    gap:4px;
+  }
+  .nav-item{
+    padding:10px 6px;
+    font-size:11px;
+  }
+  .nav-icon{
+    font-size:18px;
+  }
+  .result-car-card{
+    margin-top:0;
+  }
+  .details-shell{
+    margin-top:16px;
+  }
+  .intro-overlay{
+    padding:36px;
+  }
+  .intro-card{
+    width:min(1140px,100%);
+    padding:34px 34px 32px;
+    display:grid;
+    grid-template-columns:1fr 420px;
+    gap:26px;
+    align-items:start;
+  }
+  .intro-title{
+    font-size:58px;
+    max-width:560px;
+  }
+  .intro-subtitle{
+    font-size:16px;
+    max-width:600px;
+  }
+  .intro-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    margin-bottom:0;
+  }
+  .intro-actions{
+    margin-top:18px;
+    max-width:520px;
+  }
+  .intro-hint{
+    text-align:left;
+    grid-column:1;
+  }
+  .intro-stage{
+    display:flex;
+  }
+}
+@media(max-width:520px){
+  .intro-title{
+    font-size:30px;
+  }
+  .intro-grid{
+    grid-template-columns:1fr;
+  }
+  .intro-actions{
+    flex-direction:column;
+  }
+  .intro-skip,
+  .intro-cta{
+    width:100%;
+  }
+  .budget-grid,
+  .ownership-grid{
+    grid-template-columns:1fr;
+  }
+  .garage-head{
+    flex-direction:column;
+  }
+  .garage-switches{
+    justify-content:flex-start;
+  }
+  .recommend-top,
+  .status-row{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .action-row{
+    flex-direction:column;
+  }
+  .action-row .ghost-btn,
+  .action-row .ghost-link{
+    width:100%;
+  }
+}
+</style>
+</head>
+<body class="intro-active">
+
+<div class="intro-overlay on" id="introOverlay">
+  <div class="intro-backdrop">
+    <div class="intro-orb one"></div>
+    <div class="intro-orb two"></div>
+    <div class="intro-orb three"></div>
+  </div>
+  <div class="intro-card">
+    <div class="intro-copy">
+      <div class="intro-badge">AutoKZ · AI Auto Concierge</div>
+      <div class="intro-progress"><div class="intro-progress-bar"></div></div>
+      <h1 class="intro-title">Добро пожаловать в AutoKZ</h1>
+      <p class="intro-subtitle">Точный AI-анализ, подбор по бюджету, сравнение машин и ориентир по расходам владения — всё в одном аккуратном мобильном интерфейсе.</p>
+      <div class="intro-grid">
+        <div class="intro-feature">
+          <div class="intro-icon">🔍</div>
+          <div class="intro-feature-title">AI анализ</div>
+          <div class="intro-feature-text">Плюсы, минусы, ликвидность и реальные ориентиры по рынку Казахстана.</div>
+        </div>
+        <div class="intro-feature">
+          <div class="intro-icon">🎯</div>
+          <div class="intro-feature-title">Подбор под тебя</div>
+          <div class="intro-feature-text">Сайт предлагает машины по бюджету, кузову и нужному приоритету.</div>
+        </div>
+        <div class="intro-feature">
+          <div class="intro-icon">🫶</div>
+          <div class="intro-feature-title">Избранное и история</div>
+          <div class="intro-feature-text">Сохраняй удачные варианты и возвращайся к ним в один тап.</div>
+        </div>
+        <div class="intro-feature">
+          <div class="intro-icon">🧾</div>
+          <div class="intro-feature-title">Стоимость владения</div>
+          <div class="intro-feature-text">Смотри не только цену покупки, но и примерные годовые расходы.</div>
+        </div>
+      </div>
+      <div class="intro-actions">
+        <button class="intro-cta" onclick="finishIntro()">Открыть AutoKZ</button>
+        <button class="intro-skip" onclick="finishIntro(true)">Пропустить</button>
+      </div>
+      <div class="intro-hint">Интерфейс откроется автоматически примерно через 10 секунд</div>
+    </div>
+    <div class="intro-stage">
+      <div class="showcase-panel primary">
+        <div class="showcase-panel-title">Desktop Experience</div>
+        <div class="showcase-text" style="font-size:13px;margin:10px 0 0;max-width:none;color:rgba(255,255,255,0.72)">Более дорогая подача для презентации: акцентный hero, живая аналитика и мягкое движение света.</div>
+        <div class="showcase-chart">
+          <div class="showcase-bar" style="height:42%"></div>
+          <div class="showcase-bar" style="height:68%"></div>
+          <div class="showcase-bar" style="height:54%"></div>
+          <div class="showcase-bar" style="height:84%"></div>
+          <div class="showcase-bar" style="height:72%"></div>
+        </div>
+      </div>
+      <div class="showcase-panel secondary">
+        <div class="showcase-panel-title">Что увидят на уроке</div>
+        <div class="showcase-list">
+          <div class="showcase-line"><span>Welcome intro</span><strong>10s</strong></div>
+          <div class="showcase-line"><span>Desktop layout</span><strong>2-column</strong></div>
+          <div class="showcase-line"><span>Visual mood</span><strong>Cinematic</strong></div>
+        </div>
+        <div class="showcase-mini-card">
+          <div class="showcase-mini-kicker">Presentation mode</div>
+          <div class="showcase-mini-title">Смотрится как реальный продукт</div>
+          <div class="showcase-mini-text">Мобильная версия остаётся удобной, а на большом экране сайт выглядит заметно дороже и интереснее.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app-shell" id="appShell">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">Auto<span>KZ</span></div>
+    <button class="header-key-btn" onclick="openKeyModal()">⚙ API Ключ</button>
+  </div>
+</div>
+
+<!-- PAGE: ГЛАВНАЯ -->
+<div class="page on" id="pageHome">
+
+  <div class="hero-banner">
+    <h1>🚗 Умный выбор авто<br>в Казахстане</h1>
+    <p>AI-анализ, сравнение, кредитный калькулятор</p>
+    <div class="hero-pills">
+      <div class="hero-pill">Рынок KZ</div>
+      <div class="hero-pill">AI-досье за минуты</div>
+      <div class="hero-pill">Сравнение и кредит</div>
+    </div>
+    <div class="hero-search">
+      <input type="text" id="searchInput" placeholder="Поиск: Toyota Camry...">
+      <button class="hero-search-btn" onclick="doSearch()">Найти</button>
+    </div>
+    <div class="hero-desktop-stack">
+      <div class="hero-stat">
+        <div class="hero-stat-label">AI Verdict</div>
+        <div class="hero-stat-value">8.7</div>
+        <div class="hero-stat-text">Средний вау-эффект и быстрая навигация по ключевым данным.</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-label">Market Pulse</div>
+        <div class="hero-wave">
+          <svg viewBox="0 0 220 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M0 40C16 40 16 10 32 10C48 10 48 32 64 32C80 32 80 16 96 16C112 16 112 44 128 44C144 44 144 24 160 24C176 24 176 36 192 36C208 36 208 14 220 14" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="hero-stat-text">Живое ощущение аналитики даже до первого анализа.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="desktop-showcase" id="desktopShowcase">
+    <div class="showcase-inner">
+      <div class="showcase-badge">Presentation Canvas</div>
+      <div class="showcase-title">AutoKZ выглядит как концепт реального сервиса</div>
+      <div class="showcase-text">Справа живёт desktop-сцена: графики, статусы, ориентиры и динамика, чтобы сайт производил сильное впечатление на большом экране даже до первого клика.</div>
+      <div class="showcase-panels">
+        <div class="showcase-panel primary">
+          <div class="showcase-panel-title">Рынок и тренды</div>
+          <div class="showcase-chart">
+            <div class="showcase-bar" style="height:34%"></div>
+            <div class="showcase-bar" style="height:58%"></div>
+            <div class="showcase-bar" style="height:44%"></div>
+            <div class="showcase-bar" style="height:78%"></div>
+            <div class="showcase-bar" style="height:66%"></div>
+          </div>
+        </div>
+        <div class="showcase-panel secondary">
+          <div class="showcase-panel-title">Ключевые фишки</div>
+          <div class="showcase-list">
+            <div class="showcase-line"><span>AI-досье</span><strong>Точно и быстро</strong></div>
+            <div class="showcase-line"><span>Budget Match</span><strong>3 smart picks</strong></div>
+            <div class="showcase-line"><span>Ownership</span><strong>Годовые расходы</strong></div>
+          </div>
+          <div class="showcase-mini-card">
+            <div class="showcase-mini-kicker">Design note</div>
+            <div class="showcase-mini-title">Мягкий свет, стекло и глубина</div>
+            <div class="showcase-mini-text">Визуал собран так, чтобы казаться современным и гармоничным, а не перегруженным.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROMO CARDS -->
+  <div class="promo-strip">
+    <div class="promo-card" onclick="switchTab('compare')">
+      <div class="promo-icon">🆚</div>
+      <div class="promo-tag">Новое</div>
+      <div class="promo-title">Сравни две машины рядом</div>
+    </div>
+    <div class="promo-card blue" onclick="switchTab('credit')">
+      <div class="promo-icon">🏦</div>
+      <div class="promo-tag" style="color:#2563EB">Кредит</div>
+      <div class="promo-title">Калькулятор лизинга</div>
+    </div>
+    <div class="promo-card green" onclick="switchTab('chat')">
+      <div class="promo-icon">🤖</div>
+      <div class="promo-tag" style="color:#16A34A">AI Чат</div>
+      <div class="promo-title">Спроси эксперта</div>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <div class="cats">
+    <div class="cat active" onclick="filterCat(this,'all')"><div class="cat-icon">🚘</div><div class="cat-label">Все марки</div></div>
+    <div class="cat" onclick="filterCat(this,'japan')"><div class="cat-icon">🇯🇵</div><div class="cat-label">Японские</div></div>
+    <div class="cat" onclick="filterCat(this,'korea')"><div class="cat-icon">🇰🇷</div><div class="cat-label">Корейские</div></div>
+    <div class="cat" onclick="filterCat(this,'europe')"><div class="cat-icon">🇩🇪</div><div class="cat-label">Европейские</div></div>
+    <div class="cat" onclick="filterCat(this,'china')"><div class="cat-icon">🇨🇳</div><div class="cat-label">Китайские</div></div>
+    <div class="cat" onclick="filterCat(this,'usa')"><div class="cat-icon">🇺🇸</div><div class="cat-label">Американские</div></div>
+    <div class="cat" onclick="filterCat(this,'russia')"><div class="cat-icon">🇷🇺</div><div class="cat-label">Российские</div></div>
+    <div class="cat" onclick="filterCat(this,'electric')"><div class="cat-icon">⚡</div><div class="cat-label">Электро</div></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('analyze',this)">AI Анализ</div>
+    <div class="tab" onclick="switchTab('compare',this)">Сравнение</div>
+    <div class="tab" onclick="switchTab('credit',this)">Кредит</div>
+    <div class="tab" onclick="switchTab('trend',this)">Тренды</div>
+    <div class="tab" onclick="switchTab('chat',this)">AI Чат</div>
+  </div>
+
+  <!-- ===== TAB: ANALYZE ===== -->
+  <div id="tabAnalyze" class="selector-card tab-panel on">
+    <div class="sel-title">🔍 AI Анализ автомобиля</div>
+    <div class="sel-grid">
+      <div>
+        <div class="field-label">Марка</div>
+        <select id="bSel" onchange="onBrand()">
+          <option value="">Выбери марку</option>
+          <optgroup label="🇯🇵 Японские">
+            <option>Toyota</option><option>Honda</option><option>Nissan</option>
+            <option>Mazda</option><option>Subaru</option><option>Mitsubishi</option>
+            <option>Suzuki</option><option>Lexus</option><option>Infiniti</option><option>Acura</option>
+          </optgroup>
+          <optgroup label="🇰🇷 Корейские">
+            <option>Hyundai</option><option>Kia</option><option>Genesis</option><option>SsangYong</option>
+          </optgroup>
+          <optgroup label="🇩🇪 Немецкие">
+            <option>BMW</option><option>Mercedes-Benz</option><option>Volkswagen</option>
+            <option>Audi</option><option>Porsche</option><option>Opel</option>
+          </optgroup>
+          <optgroup label="🇫🇷 Французские">
+            <option>Renault</option><option>Peugeot</option><option>Citroën</option>
+          </optgroup>
+          <optgroup label="🇺🇸 Американские">
+            <option>Chevrolet</option><option>Ford</option><option>Jeep</option>
+            <option>Dodge</option><option>Cadillac</option><option>Lincoln</option>
+          </optgroup>
+          <optgroup label="🇷🇺 Российские">
+            <option>Lada</option><option>UAZ</option><option>GAZ</option>
+          </optgroup>
+          <optgroup label="🇨🇳 Китайские">
+            <option>Chery</option><option>Haval</option><option>BYD</option><option>Geely</option>
+            <option>Changan</option><option>Omoda</option><option>Jetour</option><option>Exeed</option>
+            <option>JAC</option><option>FAW</option><option>Dongfeng</option><option>Great Wall</option>
+            <option>Foton</option><option>Brilliance</option><option>Zotye</option><option>Lifan</option>
+            <option>BAIC</option><option>Roewe</option><option>MG</option><option>Lynk & Co</option>
+            <option>Nio</option><option>Li Auto</option><option>Xpeng</option>
+          </optgroup>
+          <optgroup label="🇮🇹 Итальянские">
+            <option>Fiat</option><option>Alfa Romeo</option>
+          </optgroup>
+          <optgroup label="🇸🇪 Шведские">
+            <option>Volvo</option><option>SAAB</option>
+          </optgroup>
+          <optgroup label="🇬🇧 Британские">
+            <option>Land Rover</option><option>Jaguar</option><option>MINI</option>
+          </optgroup>
+        </select>
+      </div>
+      <div>
+        <div class="field-label">Модель</div>
+        <select id="mSel" onchange="onModel()"><option value="">Сначала марку</option></select>
+      </div>
+    </div>
+    <div class="sel-grid">
+      <div>
+        <div class="field-label">Год выпуска</div>
+        <select id="ySel"><option value="">Год</option></select>
+      </div>
+      <div>
+        <div class="field-label">Тип кузова</div>
+        <select id="bodySel">
+          <option value="">Любой</option>
+          <option>Седан</option><option>Кроссовер</option><option>Хэтчбек</option>
+          <option>Внедорожник</option><option>Минивэн</option><option>Пикап</option><option>Купе</option>
+        </select>
+      </div>
+    </div>
+    <div class="err-banner" id="errBanner"></div>
+    <button class="analyze-btn" id="analyzeBtn" onclick="analyze()">
+      <span>✨ Анализировать с AI</span>
+    </button>
+  </div>
+
+  <div id="analyzeSupport" class="analyze-support on">
+    <div class="selector-card feature-card glow-card">
+      <div class="section-kicker">Smart Match</div>
+      <div class="sel-title">🎯 Подбор по бюджету</div>
+      <div class="section-note">Быстрый подбор 3 моделей под твой бюджет, кузов и приоритет без лишних переходов.</div>
+      <div class="budget-grid">
+        <div>
+          <div class="field-label">Бюджет до</div>
+          <input type="number" id="budgetInput" value="9000000" min="2000000" step="500000">
+        </div>
+        <div>
+          <div class="field-label">Кузов</div>
+          <select id="budgetBody">
+            <option value="">Любой</option>
+            <option>Седан</option><option>Кроссовер</option><option>Хэтчбек</option>
+            <option>Внедорожник</option><option>Минивэн</option><option>Пикап</option><option>Купе</option>
+          </select>
+        </div>
+        <div class="full">
+          <div class="field-label">Приоритет</div>
+          <select id="budgetPriority">
+            <option value="reliability">Надёжность и ликвидность</option>
+            <option value="economy">Экономия на каждый день</option>
+            <option value="family">Семья и практичность</option>
+            <option value="status">Комфорт и статус</option>
+          </select>
+        </div>
+      </div>
+      <div class="recommend-btn-row">
+        <button class="analyze-btn" onclick="recommendByBudget()">✨ Подобрать варианты</button>
+      </div>
+      <div id="budgetResults" class="budget-results">
+        <div class="empty-state">Выбери бюджет и приоритет, и сайт предложит 3 самых интересных варианта для рынка Казахстана.</div>
+      </div>
+    </div>
+
+    <div class="selector-card feature-card glow-card">
+      <div class="garage-head">
+        <div>
+          <div class="section-kicker">My Garage</div>
+          <div class="sel-title">🫶 Избранное и история</div>
+          <div class="section-note">Сохраняй удачные варианты, возвращайся к прошлым анализам и открывай их в один тап.</div>
+        </div>
+        <div class="garage-switches">
+          <button class="garage-switch active" id="garageFavBtn" onclick="switchGarageMode('favorites')">Избранное</button>
+          <button class="garage-switch" id="garageHistoryBtn" onclick="switchGarageMode('history')">История</button>
+        </div>
+      </div>
+      <div id="garageShelf" class="garage-shelf"></div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-wrap" id="resultsWrap">
+
+    <div class="result-car-card fade-in">
+      <div class="car-img-wrap">
+        <img id="rImg" src="" alt="">
+        <div class="car-img-badge" id="rBadge">AI Анализ</div>
+        <div class="car-img-score" id="rScore">—</div>
+      </div>
+      <div class="car-info">
+        <div class="car-name" id="rName">—</div>
+        <div class="car-year-tag" id="rYearTag">—</div>
+        <div class="car-price-row">
+          <div class="car-price" id="rPrice">—</div>
+          <div class="car-price-sub">средняя цена в KZ</div>
+        </div>
+        <div class="status-row">
+          <div class="status-pill maybe" id="rDecision">Можно рассмотреть</div>
+        </div>
+        <div class="action-row">
+          <button class="ghost-btn" id="favToggleBtn" onclick="toggleFavorite()">♡ В избранное</button>
+          <a class="ghost-btn ghost-link" id="kolesaBtn" href="https://kolesa.kz/" target="_blank" rel="noopener noreferrer">↗ Kolesa.kz</a>
+        </div>
+        <div class="car-tags" id="rTags"></div>
+        <div class="score-grid">
+          <div class="score-box"><div class="score-num" id="sOverall">—</div><div class="score-lbl">Рейтинг</div></div>
+          <div class="score-box"><div class="score-num" id="sRel">—</div><div class="score-lbl">Надёжность</div></div>
+          <div class="score-box"><div class="score-num" id="sCost">—</div><div class="score-lbl">Обслуж.</div></div>
+          <div class="score-box"><div class="score-num" id="sRes">—</div><div class="score-lbl">Ликвидность</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-shell fade-in" style="animation-delay:0.05s">
+      <div class="detail-nav">
+        <button class="detail-tab active" data-pane="overview" onclick="showResultPane('overview',this)">Обзор</button>
+        <button class="detail-tab" data-pane="service" onclick="showResultPane('service',this)">Сервис</button>
+        <button class="detail-tab" data-pane="ownership" onclick="showResultPane('ownership',this)">Владение</button>
+        <button class="detail-tab" data-pane="market" onclick="showResultPane('market',this)">Рынок</button>
+        <button class="detail-tab" data-pane="verdict" onclick="showResultPane('verdict',this)">Вердикт</button>
+      </div>
+
+      <section class="detail-pane on" id="paneOverview">
+        <div class="info-card">
+          <div class="info-card-head"><div class="info-card-icon red">⚖️</div><div class="info-card-title">Плюсы и минусы</div></div>
+          <div class="info-card-body">
+            <div class="pc-grid">
+              <div><div class="pc-col-head g">✅ Плюсы</div><div id="prosList"></div></div>
+              <div><div class="pc-col-head r">❌ Минусы</div><div id="consList"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail-pane" id="paneService">
+        <div class="info-card">
+          <div class="info-card-head"><div class="info-card-icon yellow">🔧</div><div class="info-card-title">Типичные болячки</div></div>
+          <div class="info-card-body" id="ailList"></div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-head"><div class="info-card-icon blue">💰</div><div class="info-card-title">Цены в Казахстане</div></div>
+          <div class="info-card-body" id="priceBlock"></div>
+        </div>
+      </section>
+
+      <section class="detail-pane" id="paneOwnership">
+        <div class="detail-pane-grid">
+          <div class="info-card">
+            <div class="info-card-head"><div class="info-card-icon green">🧾</div><div class="info-card-title">Стоимость владения в год</div></div>
+            <div class="info-card-body">
+              <div class="ownership-grid" id="ownershipGrid"></div>
+              <div class="ownership-help" id="ownershipNote"></div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-head"><div class="info-card-icon blue">🧭</div><div class="info-card-title">Кому подойдёт</div></div>
+            <div class="info-card-body">
+              <div class="fit-list" id="fitList"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="detail-pane" id="paneMarket">
+        <div class="info-card">
+          <div class="info-card-head"><div class="info-card-icon green">📈</div><div class="info-card-title">Ликвидность на рынке KZ</div></div>
+          <div class="info-card-body">
+            <div class="liq-header"><div class="liq-label" id="liqLabel">—</div><div class="liq-score" id="liqScore"></div></div>
+            <div class="liq-bar" id="liqBar"></div>
+            <div class="liq-text" id="liqText"></div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-head"><div class="info-card-icon purple">📊</div><div class="info-card-title">Динамика цен (12 мес.)</div></div>
+          <div class="info-card-body">
+            <div class="trend-chart" id="trendChart"></div>
+            <div style="font-size:12px;color:var(--muted)" id="trendText"></div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-head"><div class="info-card-icon red">🔀</div><div class="info-card-title">Альтернативы</div></div>
+          <div class="info-card-body" id="altList"></div>
+        </div>
+      </section>
+
+      <section class="detail-pane" id="paneVerdict">
+        <div class="info-card">
+          <div class="info-card-head"><div class="info-card-icon yellow">🏁</div><div class="info-card-title">Вердикт AI</div></div>
+          <div class="info-card-body">
+            <div class="verdict-text" id="verdictText"></div>
+            <div class="tags-row" id="tagsRow"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </div><!-- /results-wrap -->
+
+  <!-- ===== TAB: COMPARE ===== -->
+  <div id="tabCompare" class="selector-card tab-panel" style="display:none">
+    <div class="sel-title">🆚 Сравнение двух машин</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div>
+        <div class="field-label">Машина 1</div>
+        <select id="c1Brand" onchange="onCmpBrand(1)">
+          <option value="">Марка</option>
+          <option>Toyota</option><option>Hyundai</option><option>Kia</option><option>Chevrolet</option>
+          <option>Honda</option><option>Nissan</option><option>Mazda</option><option>Lexus</option>
+          <option>BMW</option><option>Mercedes-Benz</option><option>Audi</option><option>Volkswagen</option>
+          <option>Haval</option><option>Chery</option><option>BYD</option><option>Geely</option>
+          <option>Changan</option><option>Omoda</option><option>Lada</option>
+        </select>
+        <br><br>
+        <select id="c1Model"><option value="">Модель</option></select>
+        <br><br>
+        <select id="c1Year"><option value="">Год</option></select>
+      </div>
+      <div>
+        <div class="field-label">Машина 2</div>
+        <select id="c2Brand" onchange="onCmpBrand(2)">
+          <option value="">Марка</option>
+          <option>Toyota</option><option>Hyundai</option><option>Kia</option><option>Chevrolet</option>
+          <option>Honda</option><option>Nissan</option><option>Mazda</option><option>Lexus</option>
+          <option>BMW</option><option>Mercedes-Benz</option><option>Audi</option><option>Volkswagen</option>
+          <option>Haval</option><option>Chery</option><option>BYD</option><option>Geely</option>
+          <option>Changan</option><option>Omoda</option><option>Lada</option>
+        </select>
+        <br><br>
+        <select id="c2Model"><option value="">Модель</option></select>
+        <br><br>
+        <select id="c2Year"><option value="">Год</option></select>
+      </div>
+    </div>
+    <button class="analyze-btn" onclick="compareTwo()">🆚 Сравнить</button>
+    <div class="info-card" id="compareResult" style="display:none;margin-top:12px">
+      <div class="info-card-body" id="compareBody"></div>
+    </div>
+  </div>
+
+  <!-- ===== TAB: CREDIT ===== -->
+  <div id="tabCredit" class="selector-card tab-panel" style="display:none">
+    <div class="sel-title">🏦 Калькулятор кредита</div>
+    <div class="calc-row">
+      <div class="field-label">Стоимость авто (тенге)</div>
+      <input type="number" id="calcPrice" value="8000000" oninput="calcCredit()">
+    </div>
+    <div class="calc-row">
+      <div class="field-label">Первый взнос: <span id="downPct">20</span>%</div>
+      <input type="range" id="calcDown" min="10" max="50" value="20" oninput="calcCredit()">
+    </div>
+    <div class="calc-row">
+      <div class="field-label">Срок: <span id="termLabel">60</span> мес.</div>
+      <input type="range" id="calcTerm" min="12" max="84" step="12" value="60" oninput="calcCredit()">
+    </div>
+    <div class="calc-row">
+      <div class="field-label">Ставка: <span id="rateLabel">18</span>% годовых</div>
+      <input type="range" id="calcRate" min="10" max="30" value="18" oninput="calcCredit()">
+    </div>
+    <div class="calc-result">
+      <div class="calc-result-main" id="monthlyPayment">—</div>
+      <div class="calc-result-sub">ежемесячный платёж</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+      <div style="background:#F9FAFB;border-radius:10px;padding:10px;text-align:center">
+        <div style="font-size:16px;font-weight:700;color:var(--ink)" id="totalPay">—</div>
+        <div style="font-size:11px;color:var(--muted)">Сумма выплат</div>
+      </div>
+      <div style="background:#FEF2F2;border-radius:10px;padding:10px;text-align:center">
+        <div style="font-size:16px;font-weight:700;color:var(--red)" id="overpay">—</div>
+        <div style="font-size:11px;color:var(--muted)">Переплата</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TAB: TREND ===== -->
+  <div id="tabTrend" class="selector-card tab-panel" style="display:none">
+    <div class="sel-title">📊 Тренды авторынка KZ</div>
+    <div class="field-label">Выбери марку для анализа тренда</div>
+    <select id="trendBrand" onchange="showTrend()" style="margin-bottom:12px">
+      <option>Toyota</option><option>Hyundai</option><option>Kia</option>
+      <option>Haval</option><option>Chery</option><option>Lada</option><option>BMW</option>
+    </select>
+    <div id="trendMain"></div>
+  </div>
+
+  <!-- ===== TAB: CHAT ===== -->
+  <div id="tabChat" class="selector-card tab-panel" style="display:none">
+    <div class="sel-title">🤖 AI Авто-консультант</div>
+    <div class="quick-questions">
+      <button class="qq" onclick="sendQuick('Какие машины до 5 млн тенге лучше брать в 2025?')">До 5 млн ₸</button>
+      <button class="qq" onclick="sendQuick('Что лучше: Haval Jolion или Kia Sportage?')">Haval vs Kia</button>
+      <button class="qq" onclick="sendQuick('Какой кроссовер самый надёжный в Казахстане?')">Лучший кросс</button>
+      <button class="qq" onclick="sendQuick('Стоит ли брать BYD в Казахстане?')">BYD в KZ</button>
+      <button class="qq" onclick="sendQuick('Какая машина дешевле в обслуживании?')">Дешёвое ТО</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="msg ai">👋 Привет! Я AI-эксперт по авторынку Казахстана. Спрашивай про любую машину — отвечу честно!</div>
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="chatInput" placeholder="Спроси про авто..." onkeydown="if(event.key==='Enter')sendChat()">
+      <button class="chat-send" onclick="sendChat()">→</button>
+    </div>
+  </div>
+
+</div><!-- /pageHome -->
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">Анализирую...</div>
+  <div class="loading-sub">AI изучает авторынок Казахстана</div>
+</div>
+
+<!-- API KEY MODAL -->
+<div class="modal-overlay" id="keyModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeKeyModal()">✕</button>
+    <div class="modal-title">⚙ Groq API Ключ</div>
+    <div class="field-label">Вставь ключ (бесплатно на console.groq.com)</div>
+    <input type="password" id="apiKeyInput" placeholder="gsk_..." style="margin-bottom:6px">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:4px">1. Зайди на <strong>console.groq.com/keys</strong></div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px">2. Create API Key → копируй → вставь сюда</div>
+    <button class="save-btn" onclick="saveKey()">💾 Сохранить</button>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="nav-item active" onclick="navClick(this,'analyze')"><div class="nav-icon">🔍</div>Анализ</div>
+  <div class="nav-item" onclick="navClick(this,'compare')"><div class="nav-icon">🆚</div>Сравнить</div>
+  <div class="nav-item" onclick="navClick(this,'credit')"><div class="nav-icon">🏦</div>Кредит</div>
+  <div class="nav-item" onclick="navClick(this,'trend')"><div class="nav-icon">📊</div>Тренды</div>
+  <div class="nav-item" onclick="navClick(this,'chat')"><div class="nav-icon">🤖</div>AI Чат</div>
+</div>
+
+</div>
+
+<script>
+// ── MODELS DATA ──
+const MODELS={
+  Toyota:['Camry','Corolla','RAV4','Land Cruiser 200','Land Cruiser 300','Prado','Highlander','Fortuner','Yaris','C-HR','Venza','Alphard','HiAce','HiLux'],
+  Honda:['Accord','Civic','CR-V','Pilot','HR-V','Jazz','Freed','Odyssey','Passport','Ridgeline'],
+  Nissan:['Almera','Qashqai','X-Trail','Pathfinder','Navara','Teana','Murano','Patrol','Juke','Kicks','Note'],
+  Mazda:['Mazda3','Mazda6','CX-5','CX-30','CX-9','CX-60','MX-5','BT-50'],
+  Subaru:['Outback','Forester','XV','Impreza','Legacy','WRX','Crosstrek'],
+  Mitsubishi:['Outlander','Eclipse Cross','ASX','Pajero','L200','Colt','Galant'],
+  Suzuki:['Vitara','Grand Vitara','SX4','Swift','Jimny','Ertiga'],
+  Lexus:['RX','ES','LX','NX','GX','IS','UX','LS','RC'],
+  Infiniti:['QX60','QX80','Q50','Q60','FX35','FX37'],
+  Acura:['MDX','RDX','TLX','ILX'],
+  Hyundai:['Accent','Elantra','Tucson','Santa Fe','Creta','Sonata','Palisade','Venue','i30','Kona','Staria'],
+  Kia:['Rio','Sportage','Cerato','Sorento','K5','Stinger','Carnival','Seltos','Picanto','EV6','Telluride'],
+  Genesis:['GV80','GV70','G80','G70','GV60'],
+  SsangYong:['Actyon','Rexton','Tivoli','Korando','Musso'],
+  BMW:['3 Series','5 Series','7 Series','X3','X5','X6','X7','1 Series','2 Series','M3','M5','i4','iX'],
+  'Mercedes-Benz':['C-Class','E-Class','S-Class','GLC','GLE','GLS','A-Class','CLA','GLB','EQS'],
+  Volkswagen:['Polo','Golf','Tiguan','Passat','Touareg','Atlas','ID.4','Jetta'],
+  Audi:['A4','A6','A8','Q3','Q5','Q7','Q8','A3','e-tron'],
+  Porsche:['Cayenne','Macan','Panamera','911'],
+  Opel:['Astra','Mokka','Insignia','Zafira'],
+  Renault:['Logan','Sandero','Duster','Kaptur','Arkana','Koleos'],
+  Peugeot:['3008','5008','408','2008','308'],
+  Citroën:['C3','C4','C5 Aircross'],
+  Chevrolet:['Lacetti','Cruze','Spark','Equinox','Traverse','Tahoe','Cobalt','Captiva','Niva','Onix'],
+  Ford:['Focus','Fusion','Explorer','F-150','Escape','Edge','Ranger','Bronco','Mustang'],
+  Jeep:['Wrangler','Grand Cherokee','Cherokee','Compass','Renegade'],
+  Dodge:['Durango','Challenger','Charger','Journey'],
+  Cadillac:['Escalade','XT5','XT6','CT5'],
+  Lincoln:['Navigator','Aviator','Corsair'],
+  Lada:['Vesta','Granta','Niva Travel','Niva Legend','X-Ray','Largus','4x4'],
+  UAZ:['Patriot','Hunter','Pickup','Profi'],
+  GAZ:['Gazelle','Sobol'],
+  Chery:['Tiggo 4','Tiggo 4 Pro','Tiggo 7 Pro','Tiggo 7 Pro Max','Tiggo 8 Pro','Arrizo 5','Arrizo 8'],
+  Haval:['Jolion','F7','F7x','H6','Dargo','H9','Poer','M6'],
+  BYD:['Atto 3','Han','Seal','Dolphin','Tang','Song Plus','Song Pro','Atto 2'],
+  Geely:['Atlas','Atlas Pro','Coolray','Emgrand','Tugella','Monjaro','Okavango'],
+  Changan:['CS35 Plus','CS55 Plus','CS75 Plus','Lamore','UNI-T','UNI-K','Alsvin'],
+  Omoda:['C5','C7','C9'],
+  Jetour:['X70','X90','Dashing','T2'],
+  Exeed:['TXL','VX','LX'],
+  JAC:['J7','S3','S4','T8'],
+  FAW:['Bestune T77','Bestune T99','Bestune B70'],
+  Dongfeng:['AX7','S560','E70'],
+  'Great Wall':['Wingle','Cannon'],
+  MG:['ZS','HS','RX5','MG5','MG6','Marvel R'],
+  'Lynk & Co':['01','05','09'],
+  Nio:['ET5','ET7','ES6','ES7','EC6'],
+  'Li Auto':['L7','L8','L9'],
+  Xpeng:['P7','G9','G6'],
+  BAIC:['BJ40','X55','X75'],
+  Lifan:['X60','X70','Myway'],
+  Fiat:['500','Tipo','Doblo'],
+  'Alfa Romeo':['Stelvio','Giulia','Tonale'],
+  Volvo:['XC90','XC60','XC40','S90','V90'],
+  'Land Rover':['Defender','Discovery','Range Rover','Discovery Sport','Range Rover Sport','Evoque'],
+  Jaguar:['F-Pace','E-Pace','XF','XE','F-Type'],
+  MINI:['Cooper','Countryman','Clubman','Paceman'],
+};
+
+const MONTHS=['Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек','Янв','Фев','Мар','Апр'];
+const TAB_MAP={analyze:'tabAnalyze',compare:'tabCompare',credit:'tabCredit',trend:'tabTrend',chat:'tabChat'};
+const RESULT_PANES={overview:'paneOverview',service:'paneService',ownership:'paneOwnership',market:'paneMarket',verdict:'paneVerdict'};
+const STORAGE_KEYS={favorites:'autokzFavorites',history:'autokzHistory'};
+const BUDGET_LIBRARY=[
+  {brand:'Toyota',model:'Corolla',year:2020,body:'Седан',price:9200000,reliability:9,economy:8,family:6,status:5,tag:'Ликвидный хит',reason:'Простой в обслуживании и легко продаётся на вторичке.'},
+  {brand:'Toyota',model:'Camry',year:2018,body:'Седан',price:12800000,reliability:9,economy:6,family:7,status:8,tag:'Комфортный бизнес',reason:'Сильный баланс между комфортом, статусом и надёжностью.'},
+  {brand:'Hyundai',model:'Elantra',year:2021,body:'Седан',price:9800000,reliability:8,economy:8,family:6,status:6,tag:'Городской баланс',reason:'Свежий год, приятный расход и удобство для города.'},
+  {brand:'Kia',model:'K5',year:2021,body:'Седан',price:12900000,reliability:7,economy:6,family:7,status:8,tag:'Стиль и комфорт',reason:'Более эффектный дизайн и хороший пакет опций.'},
+  {brand:'Honda',model:'Civic',year:2019,body:'Седан',price:9300000,reliability:8,economy:8,family:5,status:6,tag:'Экономичный',reason:'Удачный вариант для ежедневной езды и низких расходов.'},
+  {brand:'Kia',model:'Sportage',year:2020,body:'Кроссовер',price:13200000,reliability:8,economy:6,family:8,status:7,tag:'Семейный кроссовер',reason:'Популярен в KZ и подходит как универсальный семейный вариант.'},
+  {brand:'Hyundai',model:'Tucson',year:2021,body:'Кроссовер',price:13800000,reliability:8,economy:6,family:8,status:7,tag:'Практичный SUV',reason:'Хороший набор оснащения и ликвидность на вторичке.'},
+  {brand:'Haval',model:'Jolion',year:2023,body:'Кроссовер',price:10900000,reliability:7,economy:7,family:7,status:6,tag:'Свежий китайский',reason:'Новый кузов, богатая комплектация и адекватная цена.'},
+  {brand:'Chery',model:'Tiggo 7 Pro',year:2023,body:'Кроссовер',price:11700000,reliability:7,economy:7,family:8,status:6,tag:'Максимум опций',reason:'Подходит, если важны свежесть, экранчики и оснащение.'},
+  {brand:'Geely',model:'Coolray',year:2022,body:'Кроссовер',price:10300000,reliability:7,economy:7,family:6,status:6,tag:'Городской кросс',reason:'Манёвренный и неплохо оснащённый вариант для города.'},
+  {brand:'Mazda',model:'CX-5',year:2019,body:'Кроссовер',price:14100000,reliability:8,economy:6,family:7,status:8,tag:'Драйверский SUV',reason:'Более премиальное ощущение без ухода в дорогой люкс.'},
+  {brand:'BMW',model:'3 Series',year:2018,body:'Седан',price:14900000,reliability:6,economy:5,family:5,status:9,tag:'Эмоция и статус',reason:'Сильный выбор, если хочется драйва и премиального имиджа.'},
+  {brand:'Lexus',model:'ES',year:2018,body:'Седан',price:17900000,reliability:9,economy:6,family:7,status:9,tag:'Надёжный премиум',reason:'Редкий случай, когда премиум и надёжность идут вместе.'},
+  {brand:'Chevrolet',model:'Cobalt',year:2022,body:'Седан',price:6800000,reliability:7,economy:8,family:6,status:4,tag:'Бюджетный практик',reason:'Один из самых понятных вариантов до 7 млн ₸.'},
+  {brand:'Lada',model:'Vesta',year:2021,body:'Седан',price:6200000,reliability:6,economy:8,family:6,status:3,tag:'Доступный выбор',reason:'Если приоритет — минимальный бюджет и простота.'},
+  {brand:'Volkswagen',model:'Polo',year:2020,body:'Седан',price:7800000,reliability:7,economy:8,family:5,status:5,tag:'Рациональный седан',reason:'Нормальный компромисс между немецкой школой и расходами.'},
+  {brand:'Subaru',model:'Forester',year:2019,body:'Кроссовер',price:14600000,reliability:8,economy:5,family:8,status:7,tag:'Для трассы и зимы',reason:'Уверенно чувствует себя в плохую погоду и на дальняках.'}
+];
+
+// ── TABS ──
+let currentTab='analyze';
+let currentAnalysis=null;
+let garageMode='favorites';
+let introDismissed=false;
+let introTimer=null;
+function syncTabChrome(tab){
+  const order=['analyze','compare','credit','trend','chat'];
+  document.querySelectorAll('.tab').forEach((item,index)=>item.classList.toggle('active',order[index]===tab));
+  document.querySelectorAll('.nav-item').forEach((item,index)=>item.classList.toggle('active',order[index]===tab));
+}
+function revealTabPanel(nextId){
+  Object.values(TAB_MAP).forEach(id=>{
+    const panel=document.getElementById(id);
+    if(id===nextId){
+      panel.style.display='block';
+      panel.classList.remove('leaving');
+      requestAnimationFrame(()=>panel.classList.add('on'));
+    }else if(panel.classList.contains('on')){
+      panel.classList.remove('on');
+      panel.classList.add('leaving');
+      setTimeout(()=>{
+        if(!panel.classList.contains('on')){
+          panel.style.display='none';
+          panel.classList.remove('leaving');
+        }
+      },200);
+    }else{
+      panel.style.display='none';
+      panel.classList.remove('leaving');
+    }
+  });
+}
+function toggleResultsWrap(){
+  const wrap=document.getElementById('resultsWrap');
+  wrap.classList.toggle('on', currentTab==='analyze' && wrap.dataset.loaded==='1');
+}
+function toggleAnalyzeSupport(){
+  document.getElementById('analyzeSupport').classList.toggle('on',currentTab==='analyze');
+}
+function updateDesktopShowcase(){
+  const stage=document.getElementById('desktopShowcase');
+  if(!stage)return;
+  const hasResults=document.getElementById('resultsWrap').dataset.loaded==='1';
+  const shouldShow=currentTab==='analyze' && !hasResults;
+  stage.classList.toggle('is-hidden',!shouldShow);
+}
+function switchTab(tab){
+  currentTab=tab;
+  revealTabPanel(TAB_MAP[tab]);
+  syncTabChrome(tab);
+  toggleAnalyzeSupport();
+  toggleResultsWrap();
+  updateDesktopShowcase();
+  if(tab==='credit')calcCredit();
+  if(tab==='trend')showTrend();
+}
+function navClick(el,tab){
+  switchTab(tab);
+}
+function startIntroSequence(){
+  clearTimeout(introTimer);
+  const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  introTimer=setTimeout(()=>finishIntro(),reduceMotion?1800:10000);
+}
+function finishIntro(immediate=false){
+  if(introDismissed)return;
+  introDismissed=true;
+  clearTimeout(introTimer);
+  const overlay=document.getElementById('introOverlay');
+  const body=document.body;
+  const app=document.getElementById('appShell');
+  const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches || immediate;
+  overlay.classList.add('leaving');
+  if(reduceMotion){
+    overlay.remove();
+    body.classList.remove('intro-active');
+    app.style.opacity='1';
+    app.style.transform='none';
+    app.style.filter='none';
+    return;
+  }
+  setTimeout(()=>{
+    body.classList.remove('intro-active');
+  },70);
+  setTimeout(()=>{
+    overlay.remove();
+  },620);
+}
+
+// ── SELECTS ──
+function onBrand(){
+  const b=document.getElementById('bSel').value,m=document.getElementById('mSel');
+  m.innerHTML='<option value="">Выбери модель</option>';
+  document.getElementById('ySel').innerHTML='<option value="">Год</option>';
+  if(b&&MODELS[b])MODELS[b].forEach(x=>m.innerHTML+=`<option>${x}</option>`);
+}
+function onModel(){
+  const y=document.getElementById('ySel');y.innerHTML='<option value="">Год</option>';
+  const now=new Date().getFullYear();
+  for(let i=now;i>=2005;i--)y.innerHTML+=`<option>${i}</option>`;
+}
+function onCmpBrand(n){
+  const b=document.getElementById(`c${n}Brand`).value;
+  const m=document.getElementById(`c${n}Model`);
+  m.innerHTML='<option value="">Модель</option>';
+  const y=document.getElementById(`c${n}Year`);y.innerHTML='<option value="">Год</option>';
+  if(b&&MODELS[b])MODELS[b].forEach(x=>m.innerHTML+=`<option>${x}</option>`);
+  const now=new Date().getFullYear();
+  for(let i=now;i>=2005;i--)y.innerHTML+=`<option>${i}</option>`;
+}
+
+// ── KEY ──
+function openKeyModal(){document.getElementById('keyModal').classList.add('on')}
+function closeKeyModal(){document.getElementById('keyModal').classList.remove('on')}
+function saveKey(){
+  const k=document.getElementById('apiKeyInput').value.trim();
+  if(!k){alert('Введи ключ');return}
+  localStorage.setItem('groqKey',k);
+  closeKeyModal();
+  alert('✅ Ключ сохранён!');
+}
+function getKey(){return localStorage.getItem('groqKey')||''}
+
+// ── GROQ API ──
+async function groq(systemMsg, userMsg, maxTokens=1500){
+  const key=getKey();
+  if(!key)throw new Error('Нет API ключа. Нажми ⚙ API Ключ');
+  const resp=await fetch("https://api.groq.com/openai/v1/chat/completions",{
+    method:"POST",
+    headers:{"Content-Type":"application/json","Authorization":`Bearer ${key}`},
+    body:JSON.stringify({
+      model:"llama-3.3-70b-versatile",
+      temperature:0.3,
+      max_tokens:maxTokens,
+      messages:[{role:"system",content:systemMsg},{role:"user",content:userMsg}]
+    })
+  });
+  const data=await resp.json();
+  if(data.error)throw new Error(data.error.message);
+  return data.choices[0].message.content;
+}
+
+// ── HELPERS ──
+function fmt(n){return Math.round(n).toLocaleString('ru-KZ')+' ₸'}
+function sc(n){return n>=8?'g':n>=6?'o':'r'}
+function showLoad(txt){const o=document.getElementById('loadingOverlay');o.classList.add('on');document.getElementById('loadingText').textContent=txt||'Анализирую...'}
+function hideLoad(){document.getElementById('loadingOverlay').classList.remove('on')}
+function esc(v){
+  return String(v??'').replace(/[&<>"']/g,ch=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[ch]));
+}
+function normalizeSearchToken(value){
+  return String(value||'')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .replace(/&/g,' and ')
+    .replace(/[^a-z0-9]+/g,' ')
+    .trim();
+}
+function slugifyKolesa(value){
+  const overrides={
+    'Mercedes-Benz':'mercedes-benz',
+    'SsangYong':'ssangyong',
+    'Great Wall':'great-wall',
+    'Land Rover':'land-rover',
+    'Lynk & Co':'lynk-and-co',
+    'Li Auto':'li-auto',
+    'Citroën':'citroen'
+  };
+  if(overrides[value])return overrides[value];
+  return normalizeSearchToken(value).replace(/\s+/g,'-');
+}
+function buildKolesaUrl(brand,model,year){
+  const brandSlug=slugifyKolesa(brand);
+  const modelSlug=model?slugifyKolesa(model):'';
+  const url=new URL(`https://kolesa.kz/cars/avtomobili-s-probegom/${brandSlug}/${modelSlug?`${modelSlug}/`:''}`);
+  if(year){
+    url.searchParams.set('year[from]',year);
+    url.searchParams.set('year[to]',year);
+  }
+  return url.toString();
+}
+function findBrandFromQuery(query){
+  const normalized=normalizeSearchToken(query);
+  return Object.keys(MODELS)
+    .sort((a,b)=>b.length-a.length)
+    .find(brand=>normalized.includes(normalizeSearchToken(brand)))||'';
+}
+function findModelFromQuery(query,brand){
+  if(!brand || !MODELS[brand])return '';
+  const normalized=normalizeSearchToken(query);
+  return [...MODELS[brand]]
+    .sort((a,b)=>b.length-a.length)
+    .find(model=>normalized.includes(normalizeSearchToken(model)))||'';
+}
+function findYearFromQuery(query){
+  const match=String(query||'').match(/\b(20\d{2}|19\d{2})\b/);
+  if(!match)return '';
+  const year=Number(match[1]);
+  return year>=2005 && year<=new Date().getFullYear()?String(year):'';
+}
+function makeCarPlaceholder(label){
+  const title=esc(label||'AutoKZ');
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675">
+    <defs>
+      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#FFF2EA"/>
+        <stop offset="55%" stop-color="#F0E4D8"/>
+        <stop offset="100%" stop-color="#D8E4F0"/>
+      </linearGradient>
+    </defs>
+    <rect width="1200" height="675" rx="40" fill="url(#bg)"/>
+    <circle cx="1010" cy="110" r="120" fill="rgba(225,91,55,0.14)"/>
+    <circle cx="170" cy="535" r="130" fill="rgba(71,110,185,0.12)"/>
+    <path d="M287 403c47-101 111-152 237-152h140c86 0 153 30 207 86l74 77c30 0 55 24 55 54v10H942c-8-40-43-70-86-70s-78 30-86 70H473c-8-40-43-70-86-70s-78 30-86 70H210v-26c0-27 18-50 44-56l33-7z" fill="#FFFFFF" fill-opacity="0.92"/>
+    <circle cx="389" cy="478" r="54" fill="#202534"/>
+    <circle cx="389" cy="478" r="25" fill="#CCD4DE"/>
+    <circle cx="855" cy="478" r="54" fill="#202534"/>
+    <circle cx="855" cy="478" r="25" fill="#CCD4DE"/>
+    <path d="M470 266h177c55 0 102 18 139 53l62 60H376c20-41 51-79 94-113z" fill="#F2F6FB" fill-opacity="0.95"/>
+    <text x="92" y="108" fill="#171B2A" font-family="Manrope, sans-serif" font-size="40" font-weight="800">${title}</text>
+    <text x="92" y="156" fill="#6B7280" font-family="Manrope, sans-serif" font-size="22" font-weight="700">Изображение не загрузилось, но анализ готов</text>
+  </svg>`;
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+const IMAGE_CACHE=new Map();
+let currentImageRequestId=0;
+function normalizeCarText(value){
+  return String(value||'')
+    .toLowerCase()
+    .replace(/&/g,' and ')
+    .replace(/[^a-z0-9]+/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+function tokenizeCarText(value){
+  return normalizeCarText(value).split(' ').filter(Boolean);
+}
+function isBadImageName(name){
+  return /(logo|badge|wordmark|interior|dashboard|steering|engine|gearbox|transmission|wheel|rim|headlight|taillight|facelift sketch|render|brochure|ad |advert|concept|prototype|police|taxi|rally|race|dtm|nascar|crash|cutaway|chassis|motor show|motorcycle|bus|truck interior)/i.test(name||'');
+}
+function scoreEntityCandidate(entity,brand,model,year){
+  const label=normalizeCarText(entity.label);
+  const desc=normalizeCarText(entity.description);
+  const brandTokens=tokenizeCarText(brand);
+  const modelTokens=tokenizeCarText(model);
+  let score=0;
+  if(label===normalizeCarText(`${brand} ${model}`))score+=60;
+  brandTokens.forEach(token=>{if(label.includes(token))score+=8});
+  modelTokens.forEach(token=>{if(label.includes(token))score+=12});
+  if(label.includes(String(year)))score+=6;
+  if(/car|automobile|vehicle|sedan|suv|crossover|pickup|hatchback|coupe|wagon|minivan|sport utility/.test(desc))score+=24;
+  if(/album|song|film|actor|football|company|surname|disambiguation|video game/.test(desc))score-=40;
+  if(desc.includes('concept'))score-=10;
+  return score;
+}
+async function fetchJson(url){
+  const resp=await fetch(url,{headers:{'Accept':'application/json'}});
+  if(!resp.ok)throw new Error(`HTTP ${resp.status}`);
+  return await resp.json();
+}
+async function fetchWikidataImageCandidates(brand,model,year){
+  const queries=[
+    `${brand} ${model} ${year}`,
+    `${brand} ${model}`,
+    model
+  ];
+  let candidates=[];
+  for(const search of queries){
+    const url=`https://www.wikidata.org/w/api.php?action=wbsearchentities&search=${encodeURIComponent(search)}&language=en&format=json&limit=8&origin=*`;
+    try{
+      const data=await fetchJson(url);
+      candidates=candidates.concat((data.search||[]).map(item=>({
+        id:item.id,
+        label:item.label||'',
+        description:item.description||'',
+        score:scoreEntityCandidate(item,brand,model,year)
+      })));
+    }catch{}
+    if(candidates.some(item=>item.score>=70))break;
+  }
+  const unique=[...new Map(candidates.sort((a,b)=>b.score-a.score).map(item=>[item.id,item])).values()]
+    .filter(item=>item.score>15)
+    .slice(0,5);
+  if(!unique.length)return [];
+  try{
+    const ids=unique.map(item=>item.id).join('|');
+    const data=await fetchJson(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${encodeURIComponent(ids)}&props=claims&format=json&origin=*`);
+    return unique.flatMap(item=>{
+      const claims=data.entities?.[item.id]?.claims?.P18||[];
+      return claims
+        .map(claim=>claim?.mainsnak?.datavalue?.value)
+        .filter(Boolean)
+        .map(fileName=>({fileName,score:item.score,label:item.label,description:item.description}));
+    });
+  }catch{
+    return [];
+  }
+}
+async function fetchWikipediaImageCandidates(brand,model,year){
+  const searchTerms=[`${brand} ${model}`,model];
+  let pages=[];
+  for(const term of searchTerms){
+    try{
+      const data=await fetchJson(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(term)}&format=json&formatversion=2&srlimit=6&origin=*`);
+      pages=pages.concat(data.query?.search||[]);
+    }catch{}
+  }
+  const unique=[...new Map(pages.map(page=>[page.pageid,page])).values()].slice(0,6);
+  if(!unique.length)return [];
+  const ids=unique.map(page=>page.pageid).join('|');
+  try{
+    const data=await fetchJson(`https://en.wikipedia.org/w/api.php?action=query&pageids=${encodeURIComponent(ids)}&prop=pageimages&piprop=original|name&format=json&formatversion=2&origin=*`);
+    return (data.query?.pages||[]).map(page=>{
+      const imageName=page.pageimage||page.original?.source||'';
+      return {
+        fileName:imageName,
+        directUrl:page.original?.source||'',
+        score:scoreEntityCandidate({label:page.title,description:''},brand,model,year)+(page.original?.source?8:0),
+        label:page.title
+      };
+    }).filter(item=>item.score>15);
+  }catch{
+    return [];
+  }
+}
+async function resolveCommonsFileUrl(candidate){
+  if(candidate.directUrl)return candidate.directUrl;
+  const title=candidate.fileName.startsWith('File:')?candidate.fileName:`File:${candidate.fileName}`;
+  const data=await fetchJson(`https://commons.wikimedia.org/w/api.php?action=query&titles=${encodeURIComponent(title)}&prop=imageinfo&iiprop=url&iiurlwidth=1280&format=json&formatversion=2&origin=*`);
+  const page=data.query?.pages?.[0];
+  const info=page?.imageinfo?.[0];
+  return info?.thumburl||info?.url||'';
+}
+async function findExactCarImage(brand,model,year){
+  const cacheKey=`${brand}|${model}|${year}`;
+  if(IMAGE_CACHE.has(cacheKey))return IMAGE_CACHE.get(cacheKey);
+  const wikidataCandidates=await fetchWikidataImageCandidates(brand,model,year);
+  const wikiCandidates=await fetchWikipediaImageCandidates(brand,model,year);
+  const combined=[...wikidataCandidates,...wikiCandidates]
+    .filter(item=>item.fileName || item.directUrl)
+    .filter(item=>!isBadImageName(item.fileName||item.directUrl))
+    .sort((a,b)=>b.score-a.score);
+  for(const candidate of combined){
+    try{
+      const url=await resolveCommonsFileUrl(candidate);
+      if(url){
+        IMAGE_CACHE.set(cacheKey,url);
+        return url;
+      }
+    }catch{}
+  }
+  const fallback=makeCarPlaceholder(`${brand} ${model} ${year}`);
+  IMAGE_CACHE.set(cacheKey,fallback);
+  return fallback;
+}
+function setCarImage(brand,model,year,label){
+  const img=document.getElementById('rImg');
+  const wrap=document.querySelector('.car-img-wrap');
+  const requestId=++currentImageRequestId;
+  wrap.classList.add('loading');
+  img.classList.remove('is-ready');
+  img.alt=label;
+  img.referrerPolicy='no-referrer';
+  img.onload=()=>{
+    if(requestId!==currentImageRequestId)return;
+    wrap.classList.remove('loading');
+    img.classList.add('is-ready');
+  };
+  img.onerror=()=>{
+    if(requestId===currentImageRequestId){
+      wrap.classList.remove('loading');
+      img.src=makeCarPlaceholder(label);
+    }
+  };
+  img.src=makeCarPlaceholder(label);
+  findExactCarImage(brand,model,year).then(url=>{
+    if(requestId!==currentImageRequestId)return;
+    img.classList.remove('is-ready');
+    img.src=url;
+  }).catch(()=>{
+    if(requestId===currentImageRequestId){
+      wrap.classList.remove('loading');
+    }
+  });
+}
+function showResultPane(pane,btn){
+  Object.entries(RESULT_PANES).forEach(([key,id])=>{
+    document.getElementById(id).classList.toggle('on',key===pane);
+  });
+  document.querySelectorAll('.detail-tab').forEach(tab=>{
+    tab.classList.toggle('active',tab.dataset.pane===pane || tab===btn);
+  });
+}
+function readStored(key){
+  try{return JSON.parse(localStorage.getItem(key)||'[]')}catch{return []}
+}
+function writeStored(key,value){
+  localStorage.setItem(key,JSON.stringify(value));
+}
+function makeAnalysisId(brand,model,year){
+  return `${brand}|${model}|${year}`;
+}
+function getDecisionMeta(score){
+  if(score>=8)return {label:'Брать',cls:'buy'};
+  if(score>=6.5)return {label:'Можно рассмотреть',cls:'maybe'};
+  return {label:'Лучше пропустить',cls:'skip'};
+}
+function isLuxuryBrand(brand){
+  return ['Lexus','BMW','Mercedes-Benz','Audi','Porsche','Land Rover','Jaguar','Genesis','Cadillac','Lincoln'].includes(brand);
+}
+function getCurrentBody(){
+  return document.getElementById('bodySel').value||'';
+}
+function updateFavoriteButton(){
+  const btn=document.getElementById('favToggleBtn');
+  if(!btn || !currentAnalysis)return;
+  const exists=readStored(STORAGE_KEYS.favorites).some(item=>item.id===currentAnalysis.id);
+  btn.textContent=exists?'♥ В избранном':'♡ В избранное';
+  btn.classList.toggle('active',exists);
+}
+function persistHistory(record){
+  const list=readStored(STORAGE_KEYS.history).filter(item=>item.id!==record.id);
+  list.unshift({...record,lastViewedAt:Date.now()});
+  writeStored(STORAGE_KEYS.history,list.slice(0,8));
+}
+function toggleFavorite(){
+  if(!currentAnalysis)return;
+  const items=readStored(STORAGE_KEYS.favorites);
+  const idx=items.findIndex(item=>item.id===currentAnalysis.id);
+  if(idx>=0){
+    items.splice(idx,1);
+  }else{
+    items.unshift({...currentAnalysis,savedAt:Date.now()});
+  }
+  writeStored(STORAGE_KEYS.favorites,items.slice(0,12));
+  updateFavoriteButton();
+  renderGarage();
+}
+function switchGarageMode(mode){
+  garageMode=mode;
+  document.getElementById('garageFavBtn').classList.toggle('active',mode==='favorites');
+  document.getElementById('garageHistoryBtn').classList.toggle('active',mode==='history');
+  renderGarage();
+}
+function removeFavorite(event,index){
+  event.stopPropagation();
+  const items=readStored(STORAGE_KEYS.favorites);
+  items.splice(index,1);
+  writeStored(STORAGE_KEYS.favorites,items);
+  updateFavoriteButton();
+  renderGarage();
+}
+function clearHistory(){
+  writeStored(STORAGE_KEYS.history,[]);
+  renderGarage();
+}
+function hydrateSelection(item){
+  document.getElementById('bSel').value=item.brand;
+  onBrand();
+  document.getElementById('mSel').value=item.model;
+  onModel();
+  document.getElementById('ySel').value=item.year;
+  if(item.body)document.getElementById('bodySel').value=item.body;
+}
+function openGarageItem(mode,index){
+  const items=readStored(mode==='favorites'?STORAGE_KEYS.favorites:STORAGE_KEYS.history);
+  const item=items[index];
+  if(!item)return;
+  hydrateSelection(item);
+  switchTab('analyze');
+  renderResults(item.brand,item.model,item.year,item.data,true);
+}
+function renderGarage(){
+  const shelf=document.getElementById('garageShelf');
+  if(!shelf)return;
+  const favorites=readStored(STORAGE_KEYS.favorites);
+  const history=readStored(STORAGE_KEYS.history);
+  document.getElementById('garageFavBtn').textContent=`Избранное ${favorites.length}`;
+  document.getElementById('garageHistoryBtn').textContent=`История ${history.length}`;
+  const items=garageMode==='favorites'?favorites:history;
+  if(!items.length){
+    shelf.innerHTML=`<div class="empty-state">${garageMode==='favorites'?'Пока ничего не сохранено. После анализа нажми “В избранное”, и машина появится здесь.':'История появится после первого анализа машины.'}</div>`;
+    return;
+  }
+  shelf.innerHTML=items.map((item,index)=>{
+    const stamp=garageMode==='favorites'?'Сохранено':'Смотрел';
+    const time=new Date((item.savedAt||item.lastViewedAt||Date.now())).toLocaleDateString('ru-KZ',{day:'2-digit',month:'short'});
+    const decision=item.decision?.label||getDecisionMeta(item.data?.scores?.overall||7).label;
+    const secondaryAction=garageMode==='favorites'
+      ? `<button class="mini-btn danger" onclick="removeFavorite(event,${index})">Удалить</button>`
+      : index===0?'<button class="mini-btn danger" onclick="clearHistory();event.stopPropagation()">Очистить</button>':'';
+    return `<div class="garage-item" onclick="openGarageItem('${garageMode}',${index})">
+      <div class="garage-main">
+        <div class="garage-title">${esc(item.brand)} ${esc(item.model)} ${esc(item.year)}</div>
+        <div class="garage-meta">${decision} · ${item.body?esc(item.body)+' · ':''}${stamp.toLowerCase()} ${time}</div>
+      </div>
+      <div class="garage-actions">
+        <button class="mini-btn" onclick="openGarageItem('${garageMode}',${index});event.stopPropagation()">Открыть</button>
+        ${secondaryAction}
+      </div>
+    </div>`;
+  }).join('');
+}
+function scoreBudgetCandidate(item,budget,body,priority){
+  const bodyBonus=!body||body===item.body?18:-10;
+  const pricePenalty=item.price>budget?(item.price-budget)/250000:-Math.min((budget-item.price)/450000,10);
+  const priorityScore=item[priority]||0;
+  return priorityScore*14 + bodyBonus - pricePenalty;
+}
+function reasonForPriority(item,priority){
+  const map={
+    reliability:'Надёжность и ликвидность выглядят сильнее среднего для этого бюджета.',
+    economy:'Ожидаются более комфортные расходы на топливо и сервис.',
+    family:'По практичности и универсальности вариант хорошо подходит семье.',
+    status:'Даёт более дорогие ощущения и приятный уровень комфорта.'
+  };
+  return `${item.reason} ${map[priority]}`;
+}
+function applyRecommendation(brand,model,year,body){
+  document.getElementById('bSel').value=brand;
+  onBrand();
+  document.getElementById('mSel').value=model;
+  onModel();
+  document.getElementById('ySel').value=year;
+  document.getElementById('bodySel').value=body||'';
+  switchTab('analyze');
+  document.getElementById('tabAnalyze').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function recommendByBudget(){
+  const budget=parseFloat(document.getElementById('budgetInput').value)||0;
+  const body=document.getElementById('budgetBody').value;
+  const priority=document.getElementById('budgetPriority').value;
+  const box=document.getElementById('budgetResults');
+  if(budget<2000000){
+    box.innerHTML='<div class="empty-state">Для более точной подборки укажи бюджет хотя бы от 2 млн ₸.</div>';
+    return;
+  }
+  const ranked=[...BUDGET_LIBRARY]
+    .map(item=>({...item,score:scoreBudgetCandidate(item,budget,body,priority)}))
+    .sort((a,b)=>b.score-a.score)
+    .slice(0,3);
+  box.innerHTML=ranked.map(item=>{
+    const payment=Math.round(item.price*0.8*0.025);
+    const delta=item.price<=budget?'Входит в бюджет':`Примерно на ${fmt(item.price-budget)} выше`;
+    return `<div class="recommend-card">
+      <div class="recommend-top">
+        <div>
+          <div class="recommend-name">${esc(item.brand)} ${esc(item.model)} ${item.year}</div>
+          <div class="recommend-meta">${esc(item.body)} · ${esc(item.tag)} · ежемесячно от ~${fmt(payment)}</div>
+        </div>
+        <div class="recommend-price">${fmt(item.price)}</div>
+      </div>
+      <div class="recommend-reason">${esc(reasonForPriority(item,priority))}</div>
+      <div class="recommend-tags">
+        <span class="soft-tag">${esc(delta)}</span>
+        <span class="soft-tag cool">${priority==='reliability'?'Надёжность':priority==='economy'?'Экономия':priority==='family'?'Семья':'Статус'}</span>
+        <span class="soft-tag green">AI анализ в 1 тап</span>
+      </div>
+      <div class="recommend-btn-row">
+        <button class="ghost-btn" onclick="applyRecommendation('${esc(item.brand)}','${esc(item.model)}','${item.year}','${esc(item.body)}')">Подставить в анализ</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function estimateOwnership(analysis){
+  const d=analysis.data;
+  const avg=d.price.avg_kzt||0;
+  const body=analysis.body||'';
+  const brand=analysis.brand;
+  const model=analysis.model.toLowerCase();
+  const electric=body==='Электро'||/ev|e-tron|ix|eq|ioniq|byd|seal|dolphin|atto/i.test(`${brand} ${analysis.model}`);
+  const baseFuel=body==='Седан'?7.6:body==='Кроссовер'?9.2:body==='Внедорожник'?12.4:body==='Минивэн'?10.8:body==='Пикап'?11.5:8.4;
+  const annualKm=18000;
+  const fuelPrice=255;
+  const kwhPrice=28;
+  const efficiencyFactor=Math.max(0.72,1.14-((d.scores.cost||7)-5)*0.04);
+  const fuelCost=electric
+    ? Math.round(annualKm*18/100*kwhPrice)
+    : Math.round(annualKm*baseFuel/100*fuelPrice*efficiencyFactor);
+  const serviceRate=isLuxuryBrand(brand)?0.028:0.017;
+  const serviceCost=Math.round(avg*serviceRate*(1+(8-(d.scores.cost||7))*0.06));
+  const insuranceCost=Math.round(avg*(isLuxuryBrand(brand)?0.017:0.012));
+  const taxCost=Math.round(body==='Внедорожник'||body==='Пикап'?avg*0.0045:avg*0.0026);
+  const reserve=Math.round(avg*(Math.max(0.012,0.026-((d.scores.reliability||7))*0.0017)));
+  const total=fuelCost+serviceCost+insuranceCost+taxCost+reserve;
+  const monthly=Math.round(total/12);
+  const note=electric
+    ? 'Для EV энергозатраты ниже, но оставлен резерв на шины, зарядку и непредвиденные расходы.'
+    : isLuxuryBrand(brand)
+      ? 'Для премиум-сегмента заложен более высокий сервис и страховка, чтобы расчёт был ближе к реальности.'
+      : 'Это ориентир для обычной эксплуатации в Казахстане: город + трасса, без экстремальных сценариев.';
+  const fit=[
+    d.scores.reliability>=8?'Тем, кто не хочет часто ездить в сервис':'Тем, кто готов следить за состоянием машины',
+    d.liquidity.score>=7?'Тем, кто планирует потом легко продать авто':'Тем, кто покупает надолго и не спешит с перепродажей',
+    body==='Кроссовер'||body==='Внедорожник'?'Семье и поездкам по плохим дорогам':'Городу, парковкам и ежедневным маршрутам',
+    isLuxuryBrand(brand)?'Тем, кому важны комфорт и статус':'Тем, кто хочет разумный баланс расходов и удобства'
+  ];
+  return {fuelCost,serviceCost,insuranceCost,taxCost,reserve,total,monthly,note,fit};
+}
+function renderOwnership(analysis){
+  const own=estimateOwnership(analysis);
+  document.getElementById('ownershipGrid').innerHTML=[
+    ['Топливо / энергия',fmt(own.fuelCost),'При 18 000 км в год'],
+    ['Плановое ТО',fmt(own.serviceCost),'С учётом класса авто и оценки обслуживания'],
+    ['Страховка',fmt(own.insuranceCost),'Ориентир для стандартной защиты'],
+    ['Налог и прочее',fmt(own.taxCost+own.reserve),'Налог + резерв на мелкие сюрпризы'],
+    ['Всего в год',fmt(own.total),'Полная ориентировочная нагрузка'],
+    ['В месяц',fmt(own.monthly),'Чтобы понимать реальный ритм расходов']
+  ].map(([label,value,help])=>`<div class="ownership-item"><div class="ownership-label">${label}</div><div class="ownership-value">${value}</div><div class="ownership-help">${help}</div></div>`).join('');
+  document.getElementById('ownershipNote').textContent=own.note;
+  document.getElementById('fitList').innerHTML=own.fit.map(item=>`<span class="fit-chip">${esc(item)}</span>`).join('');
+}
+
+// ── ANALYZE ──
+async function analyze(){
+  const b=document.getElementById('bSel').value;
+  const m=document.getElementById('mSel').value;
+  const y=document.getElementById('ySel').value;
+  const err=document.getElementById('errBanner');
+  err.style.display='none';
+  if(!b||!m||!y){err.style.display='block';err.textContent='Выбери марку, модель и год';return}
+
+  showLoad(`Анализирую ${b} ${m} ${y}...`);
+  const prompt=`Авто: ${b} ${m} ${y} год. Авторынок Казахстана.
+Ответь ТОЛЬКО валидным JSON без markdown:
+{"scores":{"overall":<1-10>,"reliability":<1-10>,"cost":<1-10>,"resale":<1-10>},"pros":["<плюс>","<плюс>","<плюс>","<плюс>"],"cons":["<минус>","<минус>","<минус>","<минус>"],"ailments":[{"title":"<болячка>","desc":"<когда и что>"},{"title":"<>","desc":"<>"},{"title":"<>","desc":"<>"}],"liquidity":{"score":<1-10>,"label":"<Высокая/Средняя/Низкая>","text":"<1-2 предложения>"},"price":{"min_kzt":<число>,"avg_kzt":<число>,"max_kzt":<число>},"trend":[<12 чисел — относительные цены по месяцам от -100 до 100, последнее=текущий>],"trend_text":"<1 предложение о тренде цен>","alternatives":[{"name":"<марка модель год>","price_kzt":<число>,"tag":"<2 слова>"},{"name":"<>","price_kzt":<число>,"tag":"<>"},{"name":"<>","price_kzt":<число>,"tag":"<>"}],"verdict":"<3-4 предложения>","tags":["<тег>","<тег>","<тег>"],"kz_tags":["<особенность KZ>","<особенность KZ>"],"image_query":"<english car search, e.g. Toyota Camry 2020 silver>"}`;
+
+  try{
+    const raw=await groq("Ты эксперт по авторынку Казахстана. Отвечай ТОЛЬКО валидным JSON без markdown.",prompt,1500);
+    const d=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    hideLoad();
+    renderResults(b,m,y,d);
+  }catch(e){
+    hideLoad();
+    err.style.display='block';
+    err.textContent='Ошибка: '+e.message;
+  }
+}
+
+function renderResults(b,m,y,d){
+  const title=`${b} ${m} ${y}`;
+  const body=getCurrentBody();
+  const decision=getDecisionMeta(d.scores.overall);
+  const kolesaUrl=buildKolesaUrl(b,m,y);
+  currentAnalysis={id:makeAnalysisId(b,m,y),brand:b,model:m,year:y,body,data:d,decision,kolesaUrl};
+  setCarImage(b,m,y,title);
+  document.getElementById('rBadge').textContent='AI Анализ';
+  document.getElementById('rScore').textContent=d.scores.overall+'/10 ⭐';
+  document.getElementById('rName').textContent=`${b} ${m}`;
+  document.getElementById('rYearTag').textContent=y+' год · '+(body||'без уточнения кузова')+' · AI-оценка';
+  document.getElementById('rPrice').textContent=fmt(d.price.avg_kzt);
+  const kolesaBtn=document.getElementById('kolesaBtn');
+  kolesaBtn.href=kolesaUrl;
+  kolesaBtn.title=`Открыть объявления ${b} ${m} ${y} на Kolesa.kz`;
+  kolesaBtn.textContent='↗ Лучшие варианты на Kolesa';
+  const decisionEl=document.getElementById('rDecision');
+  decisionEl.textContent=decision.label;
+  decisionEl.className='status-pill '+decision.cls;
+
+  // tags
+  const tagsEl=document.getElementById('rTags');
+  tagsEl.innerHTML='<span class="ctag red">AI анализ</span>';
+  if(d.scores.reliability>=8)tagsEl.innerHTML+='<span class="ctag green">Надёжный</span>';
+  if(d.liquidity.score>=7)tagsEl.innerHTML+='<span class="ctag green">Ликвидный</span>';
+  if(body)tagsEl.innerHTML+=`<span class="ctag">${esc(body)}</span>`;
+
+  // scores
+  const s=d.scores;
+  [['sOverall',s.overall],['sRel',s.reliability],['sCost',s.cost],['sRes',s.resale]].forEach(([id,v])=>{
+    const el=document.getElementById(id);el.textContent=v;el.className='score-num '+sc(v);
+  });
+
+  // pros cons
+  document.getElementById('prosList').innerHTML=d.pros.map(p=>`<div class="pc-li"><span class="pc-mark g">+</span>${esc(p)}</div>`).join('');
+  document.getElementById('consList').innerHTML=d.cons.map(c=>`<div class="pc-li"><span class="pc-mark r">−</span>${esc(c)}</div>`).join('');
+
+  // ailments
+  document.getElementById('ailList').innerHTML=d.ailments.map(a=>`<div class="ail-item"><div class="ail-dot"></div><div><div class="ail-name">${esc(a.title)}</div><div class="ail-desc">${esc(a.desc)}</div></div></div>`).join('');
+
+  // liquidity
+  const liq=d.liquidity;
+  const liqLbl=document.getElementById('liqLabel');
+  liqLbl.textContent=liq.label;
+  liqLbl.style.color=liq.score>=7?'var(--green)':liq.score>=5?'var(--yellow)':'var(--red)';
+  document.getElementById('liqScore').textContent=liq.score+'/10';
+  let barHtml='';
+  for(let i=1;i<=10;i++){const cls=i<=liq.score?(liq.score>=7?'on':liq.score>=5?'on mid':'on lo'):'';barHtml+=`<div class="liq-seg ${cls}"></div>`}
+  document.getElementById('liqBar').innerHTML=barHtml;
+  document.getElementById('liqText').textContent=liq.text;
+
+  // prices
+  const pr=d.price,mx=pr.max_kzt;
+  document.getElementById('priceBlock').innerHTML=`
+    <div class="price-item"><div class="price-row"><span>Минимум</span><strong>${fmt(pr.min_kzt)}</strong></div><div class="pbar-bg"><div class="pbar-fg min" data-p="${Math.round(pr.min_kzt/mx*100)}"></div></div></div>
+    <div class="price-item"><div class="price-row"><span>Средняя</span><strong>${fmt(pr.avg_kzt)}</strong></div><div class="pbar-bg"><div class="pbar-fg avg" data-p="${Math.round(pr.avg_kzt/mx*100)}"></div></div></div>
+    <div class="price-item"><div class="price-row"><span>Максимум</span><strong>${fmt(pr.max_kzt)}</strong></div><div class="pbar-bg"><div class="pbar-fg max" data-p="100"></div></div></div>`;
+
+  // trend chart
+  const trend=d.trend||Array(12).fill(0).map(()=>Math.floor(Math.random()*60+20));
+  const tMax=Math.max(...trend);
+  const trendEl=document.getElementById('trendChart');
+  trendEl.innerHTML=trend.map((v,i)=>{
+    const h=Math.round((v/tMax)*70)+10;
+    const isPeak=v===tMax;
+    return `<div class="trend-bar-wrap"><div class="trend-val">${v>0?'+':''}${v}</div><div class="trend-bar${isPeak?' peak':''}" style="height:${h}px"></div><div class="trend-label">${MONTHS[i]}</div></div>`;
+  }).join('');
+  document.getElementById('trendText').textContent=d.trend_text||'';
+
+  // alternatives
+  document.getElementById('altList').innerHTML=d.alternatives.map(a=>{
+    const diff=a.price_kzt-pr.avg_kzt;
+    const diffStr=diff>0?`+${fmt(diff)} дороже`:`${fmt(Math.abs(diff))} дешевле`;
+    const cls=diff>0?'pricier':'cheaper';
+    return `<div class="alt-card"><div><div class="alt-name">${esc(a.name)}</div><div class="alt-tag">${esc(a.tag)}</div></div><div><div class="alt-price">${fmt(a.price_kzt)}</div><div class="alt-diff ${cls}">${diffStr}</div></div></div>`;
+  }).join('');
+
+  // verdict
+  document.getElementById('verdictText').textContent=d.verdict;
+  document.getElementById('tagsRow').innerHTML=[
+    ...(d.tags||[]).map(t=>`<span class="vtag">${esc(t)}</span>`),
+    ...(d.kz_tags||[]).map(t=>`<span class="vtag kz">${esc(t)}</span>`)
+  ].join('');
+  renderOwnership(currentAnalysis);
+  persistHistory(currentAnalysis);
+  updateFavoriteButton();
+  renderGarage();
+
+  const rw=document.getElementById('resultsWrap');
+  rw.dataset.loaded='1';
+  showResultPane('overview');
+  toggleResultsWrap();
+  updateDesktopShowcase();
+  setTimeout(()=>document.querySelectorAll('.pbar-fg').forEach(el=>{el.style.width=el.dataset.p+'%'}),200);
+  rw.scrollIntoView({behavior:'smooth'});
+}
+
+// ── COMPARE ──
+async function compareTwo(){
+  const b1=document.getElementById('c1Brand').value,m1=document.getElementById('c1Model').value,y1=document.getElementById('c1Year').value;
+  const b2=document.getElementById('c2Brand').value,m2=document.getElementById('c2Model').value,y2=document.getElementById('c2Year').value;
+  if(!b1||!m1||!y1||!b2||!m2||!y2){alert('Заполни оба авто');return}
+  showLoad('Сравниваю два авто...');
+  const prompt=`Сравни два авто для рынка Казахстана: АВТО1: ${b1} ${m1} ${y1}, АВТО2: ${b2} ${m2} ${y2}.
+Ответь ТОЛЬКО валидным JSON:
+{"car1":{"name":"${b1} ${m1}","reliability":<1-10>,"cost":<1-10>,"resale":<1-10>,"safety":<1-10>,"price_kzt":<число>},"car2":{"name":"${b2} ${m2}","reliability":<1-10>,"cost":<1-10>,"resale":<1-10>,"safety":<1-10>,"price_kzt":<число>},"winner":"<car1 или car2>","verdict":"<2-3 предложения кто лучше и почему>"}`;
+  try{
+    const raw=await groq("Эксперт авторынка KZ. Только JSON.",prompt,600);
+    const d=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    hideLoad();
+    renderCompare(d);
+  }catch(e){hideLoad();alert('Ошибка: '+e.message)}
+}
+
+function renderCompare(d){
+  const metrics=[['reliability','Надёжность'],['cost','Обслуживание'],['resale','Ликвидность'],['safety','Безопасность']];
+  let html=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+    <div style="background:${d.winner==='car1'?'var(--red-soft)':'#F9FAFB'};border:${d.winner==='car1'?'2px solid var(--red)':'1px solid var(--border)'};border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:13px;font-weight:700">${esc(d.car1.name)}</div>
+      <div style="font-size:12px;color:var(--muted)">${fmt(d.car1.price_kzt)}</div>
+      ${d.winner==='car1'?'<div style="font-size:11px;color:var(--red);font-weight:700;margin-top:4px">🏆 Победитель</div>':''}
+    </div>
+    <div style="background:${d.winner==='car2'?'var(--red-soft)':'#F9FAFB'};border:${d.winner==='car2'?'2px solid var(--red)':'1px solid var(--border)'};border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:13px;font-weight:700">${esc(d.car2.name)}</div>
+      <div style="font-size:12px;color:var(--muted)">${fmt(d.car2.price_kzt)}</div>
+      ${d.winner==='car2'?'<div style="font-size:11px;color:var(--red);font-weight:700;margin-top:4px">🏆 Победитель</div>':''}
+    </div></div>`;
+  metrics.forEach(([k,label])=>{
+    const v1=d.car1[k],v2=d.car2[k];
+    html+=`<div style="margin-bottom:6px"><div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:4px">${label}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+      <div style="background:${v1>v2?'#F0FDF4':v1<v2?'#FEF2F2':'#F9FAFB'};border-radius:8px;padding:8px;text-align:center;font-weight:700;color:${v1>v2?'var(--green)':v1<v2?'var(--red)':'var(--ink)'}">${v1}/10</div>
+      <div style="background:${v2>v1?'#F0FDF4':v2<v1?'#FEF2F2':'#F9FAFB'};border-radius:8px;padding:8px;text-align:center;font-weight:700;color:${v2>v1?'var(--green)':v2<v1?'var(--red)':'var(--ink)'}">${v2}/10</div>
+    </div></div>`;
+  });
+  html+=`<div style="background:var(--red-soft);border-radius:10px;padding:12px;margin-top:12px;font-size:13px;color:var(--ink);line-height:1.5;border-left:3px solid var(--red)">${esc(d.verdict)}</div>`;
+  document.getElementById('compareBody').innerHTML=html;
+  document.getElementById('compareResult').style.display='block';
+}
+
+// ── CREDIT CALC ──
+function calcCredit(){
+  const price=parseFloat(document.getElementById('calcPrice').value)||0;
+  const downPct=parseInt(document.getElementById('calcDown').value);
+  const term=parseInt(document.getElementById('calcTerm').value);
+  const rate=parseFloat(document.getElementById('calcRate').value);
+  document.getElementById('downPct').textContent=downPct;
+  document.getElementById('termLabel').textContent=term;
+  document.getElementById('rateLabel').textContent=rate;
+  const loan=price*(1-downPct/100);
+  const r=rate/100/12;
+  const payment=loan*(r*Math.pow(1+r,term))/(Math.pow(1+r,term)-1);
+  const total=payment*term;
+  const over=total-loan;
+  document.getElementById('monthlyPayment').textContent=fmt(Math.round(payment));
+  document.getElementById('totalPay').textContent=fmt(Math.round(total));
+  document.getElementById('overpay').textContent=fmt(Math.round(over));
+}
+
+// ── TREND ──
+function showTrend(){
+  const brand=document.getElementById('trendBrand').value;
+  const data=[72,68,75,80,85,79,82,88,84,90,86,92];
+  const peak=Math.max(...data);
+  const tEl=document.getElementById('trendMain');
+  tEl.innerHTML=`<div class="trend-chart">${data.map((v,i)=>`<div class="trend-bar-wrap"><div class="trend-val" style="font-size:10px;color:var(--ink);font-weight:600">${v}</div><div class="trend-bar${v===peak?' peak':''}" style="height:${Math.round(v/peak*70)+10}px"></div><div class="trend-label">${MONTHS[i]}</div></div>`).join('')}</div>
+  <div style="font-size:12px;color:var(--muted);margin-top:8px">📈 ${brand} показывает рост спроса +${Math.round((data[11]-data[0])/data[0]*100)}% за год. Высокая ликвидность на вторичном рынке.</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px">
+    <div style="background:#F0FDF4;border-radius:10px;padding:10px;text-align:center"><div style="font-size:16px;font-weight:700;color:var(--green)">+${Math.round((data[11]-data[0])/data[0]*100)}%</div><div style="font-size:11px;color:var(--muted)">За год</div></div>
+    <div style="background:#FEF2F2;border-radius:10px;padding:10px;text-align:center"><div style="font-size:16px;font-weight:700;color:var(--red)">${Math.min(...data)}</div><div style="font-size:11px;color:var(--muted)">Минимум</div></div>
+    <div style="background:var(--red-soft);border-radius:10px;padding:10px;text-align:center"><div style="font-size:16px;font-weight:700;color:var(--red)">${peak}</div><div style="font-size:11px;color:var(--muted)">Максимум</div></div>
+  </div>`;
+}
+
+// ── CHAT ──
+const chatHistory=[];
+async function sendChat(){
+  const input=document.getElementById('chatInput');
+  const msg=input.value.trim();
+  if(!msg)return;
+  input.value='';
+  addMsg(msg,'user');
+  chatHistory.push({role:'user',content:msg});
+  addMsg('Думаю...','ai typing');
+  try{
+    const key=getKey();
+    if(!key)throw new Error('Нет API ключа');
+    const resp=await fetch("https://api.groq.com/openai/v1/chat/completions",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":`Bearer ${key}`},
+      body:JSON.stringify({
+        model:"llama-3.3-70b-versatile",temperature:0.5,max_tokens:400,
+        messages:[
+          {role:"system",content:"Ты AI-консультант по авторынку Казахстана. Отвечай кратко, по-русски, конкретно. Давай практичные советы для покупателей в Казахстане. Указывай цены в тенге."},
+          ...chatHistory
+        ]
+      })
+    });
+    const data=await resp.json();
+    if(data.error)throw new Error(data.error.message);
+    const reply=data.choices[0].message.content;
+    chatHistory.push({role:'assistant',content:reply});
+    document.querySelector('.msg.typing')?.remove();
+    addMsg(reply,'ai');
+  }catch(e){
+    document.querySelector('.msg.typing')?.remove();
+    addMsg('Ошибка: '+e.message,'ai');
+  }
+}
+function sendQuick(q){document.getElementById('chatInput').value=q;sendChat()}
+function addMsg(text,cls){
+  const div=document.createElement('div');
+  div.className='msg '+cls;
+  div.textContent=text;
+  const msgs=document.getElementById('chatMessages');
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+// ── SEARCH ──
+function doSearch(){
+  const q=document.getElementById('searchInput').value.trim();
+  if(!q)return;
+  const found=findBrandFromQuery(q);
+  if(found){
+    document.getElementById('bSel').value=found;
+    onBrand();
+    const model=findModelFromQuery(q,found);
+    if(model){
+      document.getElementById('mSel').value=model;
+      onModel();
+      const year=findYearFromQuery(q);
+      if(year)document.getElementById('ySel').value=year;
+    }
+    switchTab('analyze');
+  }
+}
+
+// ── FILTER CATS ──
+function filterCat(el,cat){
+  document.querySelectorAll('.cat').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── INIT ──
+calcCredit();
+if(getKey())document.getElementById('apiKeyInput').value=getKey();
+syncTabChrome('analyze');
+toggleAnalyzeSupport();
+switchGarageMode('favorites');
+renderGarage();
+updateDesktopShowcase();
+startIntroSequence();
+document.getElementById('keyModal').addEventListener('click',e=>{
+  if(e.target.id==='keyModal')closeKeyModal();
+});
+document.getElementById('introOverlay').addEventListener('click',e=>{
+  if(e.target.id==='introOverlay')finishIntro();
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')closeKeyModal();
+  if((e.key==='Escape' || e.key==='Enter') && !introDismissed)finishIntro(true);
+});
+</script>
+</body>
+</html>
